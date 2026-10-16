@@ -1,0 +1,10 @@
+{
+  "name": "musika-worker",
+  "private": true,
+  "type": "module",
+  "main": "worker.mjs",
+  "scripts": { "start": "node worker.mjs" },
+  "dependencies": {
+    "@supabase/supabase-js": "^2.45.0"
+  }
+}
