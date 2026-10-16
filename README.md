@@ -7,6 +7,7 @@ Plataforma de música para artistas independentes e seus fãs.
 - **Artista (Studio)**: upload pelo celular com conversão automática, edição de faixas e letras, painel de dados, agenda com telão de check-in, missões, recompensas e resgates, fã-clube pago com mural exclusivo, impulsionamento pago de lançamento e equipe com convite por link.
 - **Anúncios (rede própria)**: áudio entre faixas e banners, segmentação por estilo e estado, cobrança por CPM com orçamento pré-pago, análise antes de ir ao ar e relatório para o anunciante.
 - **Pagamentos**: Pix via Pagar.me para Premium, fã-clube, impulsionamento e campanhas.
+- **Conta e avisos**: foto, bio, cidade, nome de usuário, e-mail, senha e exclusão da conta; qualidade do áudio (automática, economia de dados ou alta). Notificações no sino do site, no celular (Web Push, sem app de loja) e por e-mail para quem ativar: lançamento de quem você segue (na hora da estreia, se for agendado), show marcado, lembrete na véspera para quem é do estado, post no mural, insígnia nova e subida de nível. O admin manda avisos gerais na aba Avisos.
 - **Administração** (`/admin`): visão geral e receita, aprovação de campanhas, pagamentos, verificação de artistas, denúncias, repasses do fã-clube, banners da casa, aparência (tema, cores, nome e logo), textos do site e preços.
 - **Identidade**: tema Cartaz (claro, azul elétrico e rosa) com a fonte Archivo esticada como letra de cartaz de show, hospedada no próprio servidor. Temas Noite de São João e Paredão (escuros) prontos no admin.
 
@@ -97,7 +98,8 @@ web/                      site Next.js
 
 ## Limites conhecidos desta versão
 
-- E-mail: o cadastro entra direto, sem confirmação. Para recuperar senha por e-mail, configure SMTP em `/opt/musika-supabase/.env` (variáveis `SMTP_*`) e rode o install de novo.
+- E-mail: sem SMTP o cadastro entra direto, sem confirmação. Com SMTP, o install manda um e-mail de teste para o ADMIN_EMAIL e só liga a confirmação se ele passar. Para ver o erro exato do seu SMTP: `bash infra/testar-email.sh voce@exemplo.com`.
+- Notificações no iPhone só funcionam com o Musika instalado na tela inicial (iOS 16.4 ou mais novo).
 - Os links de áudio HLS são públicos (endereços longos e imprevisíveis). Proteção contra uso em outros sites e assinatura de URL ficam para a próxima fase.
 - Pagamento só por Pix, sem cartão nem renovação automática: Premium e fã-clube valem 30 dias por pagamento.
 - O repasse do fã-clube ao artista é manual (Pix feito por você e marcado em /admin). O split automático do Pagar.me exige cadastrar cada artista como recebedor.

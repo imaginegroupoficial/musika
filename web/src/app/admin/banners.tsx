@@ -62,13 +62,14 @@ export function BannerForm() {
   );
 }
 
-export function BannerActions({ id, active }: { id: string; active: boolean }) {
+export function BannerActions({ id, active, placement, expired }: { id: string; active: boolean; placement: string; expired?: boolean }) {
   const router = useRouter();
   const run = async (fn: () => PromiseLike<unknown>) => { await fn(); router.refresh(); };
   const sb = () => createClient().from('house_banners');
   return (
     <span className="flex gap-1">
-      <button onClick={() => run(() => sb().update({ active: !active }).eq('id', id))} className="h-9 rounded-full border border-palco px-4 text-sm font-semibold">{active ? 'Tirar do ar' : 'Colocar no ar'}</button>
+      <button onClick={() => run(() => sb().update({ active: !active || !!expired, ...(expired ? { ends_at: null } : {}) }).eq('id', id))} className="h-9 rounded-full border border-palco px-4 text-sm font-semibold">{expired ? 'Recolocar no ar' : active ? 'Tirar do ar' : 'Colocar no ar'}</button>
+      <button onClick={() => run(() => sb().update({ placement: placement === 'carrossel' ? 'faixa' : 'carrossel' }).eq('id', id))} className="h-9 rounded-full border border-palco px-4 text-sm font-semibold">{placement === 'carrossel' ? 'Virar faixa' : 'Virar carrossel'}</button>
       <button onClick={() => window.confirm('Excluir este banner?') && run(() => sb().delete().eq('id', id))} className="h-9 rounded-full px-3 text-sm font-semibold text-nevoa hover:text-chita">Excluir</button>
     </span>
   );

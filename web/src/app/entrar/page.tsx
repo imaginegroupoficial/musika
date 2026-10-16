@@ -40,8 +40,10 @@ function Form() {
         msg.includes('not confirmed') ? 'Confirme seu e-mail antes de entrar. Procure o e-mail do Musika na caixa de entrada e no spam.'
         : msg.includes('invalid login') ? 'E-mail ou senha não conferem.'
         : msg.includes('already registered') ? 'Esse e-mail já tem conta. Entre com a senha.'
+        : msg.includes('sending') && msg.includes('email') ? 'Não conseguimos enviar o e-mail de confirmação agora. Tente de novo em alguns minutos.'
+        : msg.includes('rate limit') ? 'Muitas tentativas seguidas. Espere um minuto e tente de novo.'
         : msg.includes('password') ? 'A senha precisa ter pelo menos 6 caracteres.'
-        : res.error.message,
+        : 'Não deu certo agora. Tente de novo em instantes.',
       );
       return;
     }

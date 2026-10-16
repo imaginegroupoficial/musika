@@ -21,7 +21,7 @@ const extra = [
   { href: '/playlists', label: 'Playlists', Icon: QueueIcon },
 ];
 
-export function SideNav({ userSlot, isAdmin, isPremium, brandName = 'Musika', logoUrl }: { userSlot: React.ReactNode; isAdmin?: boolean; isPremium?: boolean; brandName?: string; logoUrl?: string | null }) {
+export function SideNav({ userSlot, bell, isAdmin, isPremium, brandName = 'Musika', logoUrl }: { userSlot: React.ReactNode; bell?: React.ReactNode; isAdmin?: boolean; isPremium?: boolean; brandName?: string; logoUrl?: string | null }) {
   const path = usePathname();
   const t = useT();
   const link = (href: string, label: string, Icon: (p: { className?: string }) => JSX.Element) => (
@@ -39,9 +39,12 @@ export function SideNav({ userSlot, isAdmin, isPremium, brandName = 'Musika', lo
   );
   return (
     <aside className="sticky top-0 hidden h-screen w-64 shrink-0 flex-col border-r border-palco px-4 pb-24 pt-6 md:flex">
-      <Link href="/" className="mb-8 block px-3" aria-label={brandName}>
-        {logoUrl ? <img src={logoUrl} alt={brandName} className="h-9 w-auto" /> : <span className="cartaz block text-[34px] text-sol">{brandName}</span>}
-      </Link>
+      <div className="mb-8 flex items-center justify-between gap-2 pl-3">
+        <Link href="/" className="block min-w-0" aria-label={brandName}>
+          {logoUrl ? <img src={logoUrl} alt={brandName} className="h-9 w-auto" /> : <span className="cartaz block text-[34px] text-sol">{brandName}</span>}
+        </Link>
+        {bell}
+      </div>
       <nav className="flex flex-col gap-1">
         {items.map(({ href, label, Icon }) => link(href, label, Icon))}
         {extra.map(({ href, label, Icon }) => link(href, label, Icon))}
@@ -56,7 +59,8 @@ export function SideNav({ userSlot, isAdmin, isPremium, brandName = 'Musika', lo
         {!isPremium && sub('/premium', 'Musika Premium')}
         {sub('/anunciar', 'Anunciar')}
         {sub('/retrospectiva', 'Sua retrospectiva')}
-        {sub('/conta', 'Minha conta')}
+        {sub('/notificacoes', 'Avisos')}
+        {sub('/conta', 'Minha conta e configurações')}
         {isAdmin && sub('/admin', 'Administração')}
       </div>
       <div className="mt-auto">{userSlot}</div>

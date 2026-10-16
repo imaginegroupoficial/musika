@@ -1,7 +1,7 @@
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import { getSessionProfile } from '@/lib/supabase/server';
-import { levelInfo } from '@/lib/media';
+import { avatarUrl, levelInfo } from '@/lib/media';
 
 export const revalidate = 0;
 
@@ -26,8 +26,18 @@ export default async function PerfilPage({ params }: { params: { username: strin
 
   return (
     <>
-      <p className="text-nevoa">@{p.username}</p>
-      <h1 className="mt-1 font-display text-[clamp(2.5rem,7vw,5.5rem)] font-extrabold leading-[0.9] tracking-tight">{p.display_name || p.username}</h1>
+      <div className="flex flex-wrap items-end gap-5 md:gap-7">
+        {avatarUrl(p.avatar_url) ? (
+          <img src={avatarUrl(p.avatar_url)!} alt="" className="h-28 w-28 shrink-0 rounded-full object-cover ring-4 ring-sol md:h-36 md:w-36" />
+        ) : (
+          <span className="flex h-28 w-28 shrink-0 items-center justify-center rounded-full bg-sol font-display text-5xl font-black uppercase text-noite md:h-36 md:w-36">{(p.display_name || p.username).slice(0, 1)}</span>
+        )}
+        <div className="min-w-0">
+          <p className="text-nevoa">@{p.username}{p.city ? ` · ${p.city}${p.uf ? `/${p.uf}` : ''}` : ''}</p>
+          <h1 className="cartaz mt-1 text-[clamp(2.5rem,7vw,5rem)]">{p.display_name || p.username}</h1>
+        </div>
+      </div>
+      {p.bio && <p className="mt-5 max-w-[60ch] whitespace-pre-line text-lg">{p.bio}</p>}
 
       <section className="mt-8 max-w-xl rounded-capa bg-lona p-6">
         <div className="flex items-baseline justify-between">
@@ -41,7 +51,7 @@ export default async function PerfilPage({ params }: { params: { username: strin
           {lv.next ? `Faltam ${lv.next - p.xp} pontos para o próximo nível.` : 'Nível máximo. Respeito.'}
           {p.streak > 0 ? ` Sequência atual: ${p.streak} ${p.streak === 1 ? 'dia' : 'dias'}.` : ''}
         </p>
-        {isMe && <Link href="/conta" className="mt-4 inline-block text-sm font-semibold text-sol">Editar minha conta</Link>}
+        {isMe && <Link href="/conta#perfil" className="mt-4 inline-block text-sm font-semibold text-sol">Editar perfil e configurações</Link>}
         {isMe && (
           <p className="mt-4 text-sm">
             Compartilhe qualquer CD pelo botão Compartilhar: cada amigo que ouvir pelo seu link vale 5 pontos.

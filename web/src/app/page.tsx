@@ -45,6 +45,7 @@ export default async function Home() {
           <p className="mt-6 max-w-[56ch] text-lg font-medium opacity-90">{t.home_empty_text}</p>
           <Link href="/studio" className="mt-8 inline-flex h-12 items-center rounded-full bg-noite px-6 font-semibold text-sol">{t.home_empty_cta}</Link>
         </section>
+        <AdBanner context="home" />
       </>
     );
   }

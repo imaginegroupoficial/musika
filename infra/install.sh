@@ -23,7 +23,20 @@ SMTP_PORT="${SMTP_PORT:-465}"
 SMTP_USER="${SMTP_USER:-$(prev SMTP_USER)}"
 SMTP_PASS="${SMTP_PASS:-$(prev SMTP_PASS)}"
 SMTP_FROM="${SMTP_FROM:-$(prev SMTP_FROM)}"
+# na Hostinger e em quase todo provedor o remetente precisa ser a própria conta
+case "$SMTP_USER" in *@*) SMTP_FROM="${SMTP_FROM:-$SMTP_USER}";; esac
 SMTP_FROM="${SMTP_FROM:-nao-responda@${DOMAIN}}"
+# chaves das notificações no celular (Web Push), geradas uma vez e guardadas
+VAPID_PUBLIC_KEY="${VAPID_PUBLIC_KEY:-$(prev VAPID_PUBLIC_KEY)}"
+VAPID_PRIVATE_KEY="${VAPID_PRIVATE_KEY:-$(prev VAPID_PRIVATE_KEY)}"
+if [ -z "$VAPID_PUBLIC_KEY" ] || [ -z "$VAPID_PRIVATE_KEY" ]; then
+  b64url() { base64 -w0 | tr '+/' '-_' | tr -d '='; }
+  VKEY="$(mktemp)"
+  openssl ecparam -name prime256v1 -genkey -noout -out "$VKEY"
+  VAPID_PRIVATE_KEY="$(openssl ec -in "$VKEY" -outform DER 2>/dev/null | tail -c +8 | head -c 32 | b64url)"
+  VAPID_PUBLIC_KEY="$(openssl ec -in "$VKEY" -pubout -outform DER 2>/dev/null | tail -c 65 | b64url)"
+  rm -f "$VKEY"
+fi
 APP_DIR="$(cd "$(dirname "$0")/.." && pwd)"
 SB_DIR="/opt/musika-supabase"
 SB_SRC="/opt/supabase-src"
@@ -89,8 +102,16 @@ if [ ! -f .env ]; then
   set_env .env STUDIO_DEFAULT_PROJECT Musika
 fi
 
-# e-mails: com SMTP configurado, a conta só ativa depois de confirmar o e-mail
+# e-mails: com SMTP configurado E testado, a conta só ativa depois de confirmar o e-mail.
+# Se o teste falhar, o cadastro continua funcionando sem confirmação (e o motivo aparece no final).
+SMTP_OK=""
 if [ -n "$SMTP_HOST" ]; then
+  if SMTP_HOST="$SMTP_HOST" SMTP_PORT="$SMTP_PORT" SMTP_USER="$SMTP_USER" SMTP_PASS="$SMTP_PASS" SMTP_FROM="$SMTP_FROM" \
+       bash "$APP_DIR/infra/testar-email.sh" "$ADMIN_EMAIL" > /tmp/musika-smtp.log 2>&1; then
+    SMTP_OK=1
+  fi
+fi
+if [ -n "$SMTP_OK" ]; then
   set_env .env SMTP_HOST "$SMTP_HOST"
   set_env .env SMTP_PORT "$SMTP_PORT"
   set_env .env SMTP_USER "$SMTP_USER"
@@ -101,6 +122,7 @@ if [ -n "$SMTP_HOST" ]; then
 else
   set_env .env ENABLE_EMAIL_AUTOCONFIRM true
 fi
+set_env .env SMTP_SENDER_NAME "Musika"
 
 # o nome do gateway mudou entre versões do Supabase (kong -> api-gw)
 if grep -q '^  api-gw:' docker-compose.yml; then GW=api-gw; else GW=kong; fi
@@ -194,6 +216,8 @@ SMTP_PORT=${SMTP_PORT}
 SMTP_USER=${SMTP_USER}
 SMTP_PASS=${SMTP_PASS}
 SMTP_FROM=${SMTP_FROM}
+VAPID_PUBLIC_KEY=${VAPID_PUBLIC_KEY}
+VAPID_PRIVATE_KEY=${VAPID_PRIVATE_KEY}
 EOF
 chmod 600 .env "$SB_DIR/.env"
 docker compose -p musika up -d --build
@@ -220,7 +244,7 @@ cat <<EOF
 
  Administrador: ${ADMIN_EMAIL} (crie a conta no site com esse e-mail)
 
- E-mails: $( [ -n "$SMTP_HOST" ] && echo "SMTP ${SMTP_HOST} (contas novas confirmam o e-mail)" || echo "SEM SMTP. Contas entram sem confirmar e não há recuperação de senha" )
+ E-mails: $( if [ -n "$SMTP_OK" ]; then echo "SMTP ${SMTP_HOST} testado e funcionando (contas novas confirmam o e-mail)"; elif [ -n "$SMTP_HOST" ]; then echo "SMTP ${SMTP_HOST} FALHOU no teste: $(tail -2 /tmp/musika-smtp.log | tr '\n' ' '). Cadastro segue sem confirmação. Corrija e rode: bash infra/testar-email.sh"; else echo "SEM SMTP. Contas entram sem confirmar e não há recuperação de senha"; fi )
 
  Pagar.me: $( [ -n "$PAGARME_SECRET_KEY" ] && echo "chave configurada" || echo "SEM CHAVE. Rode de novo com PAGARME_SECRET_KEY=sk_... para ativar pagamentos" )
  Webhook para cadastrar no painel do Pagar.me (eventos order.paid e charge.paid):

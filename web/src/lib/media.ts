@@ -45,3 +45,16 @@ export function levelInfo(xp: number) {
 export const adMediaUrl = (path?: string | null) => (path ? `${SUPABASE_URL}/storage/v1/object/public/ads/${path}` : null);
 
 export const brl = (cents: number) => (Number(cents || 0) / 100).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
+
+// foto de perfil: aceita caminho no bucket avatars ou endereço completo
+export const avatarUrl = (path?: string | null) =>
+  !path ? null : /^https?:\/\//.test(path) ? path : `${SUPABASE_URL}/storage/v1/object/public/avatars/${path}`;
+
+export function timeAgo(iso: string) {
+  const s = Math.max(0, (Date.now() - new Date(iso).getTime()) / 1000);
+  if (s < 60) return 'agora';
+  if (s < 3600) return `há ${Math.floor(s / 60)} min`;
+  if (s < 86400) return `há ${Math.floor(s / 3600)} h`;
+  if (s < 7 * 86400) { const d = Math.floor(s / 86400); return `há ${d} ${d === 1 ? 'dia' : 'dias'}`; }
+  return new Date(iso).toLocaleDateString('pt-BR', { day: '2-digit', month: 'short' });
+}

@@ -38,6 +38,7 @@ services:
       SUPABASE_SERVICE_ROLE_KEY: ${SERVICE_ROLE_KEY}
       PAGARME_SECRET_KEY: ${PAGARME_SECRET_KEY:-}
       PAGARME_WEBHOOK_TOKEN: ${PAGARME_WEBHOOK_TOKEN:-}
+      VAPID_PUBLIC_KEY: ${VAPID_PUBLIC_KEY:-}
     deploy:
       resources:
         limits: { memory: 2g }
@@ -57,6 +58,16 @@ services:
       SUPABASE_URL: http://supabase-gw:8000
       SUPABASE_SERVICE_ROLE_KEY: ${SERVICE_ROLE_KEY}
       MEDIA_DIR: /data/media
+      SITE_URL: https://${DOMAIN}
+      PUBLIC_SUPABASE_URL: https://db.${DOMAIN}
+      VAPID_PUBLIC_KEY: ${VAPID_PUBLIC_KEY:-}
+      VAPID_PRIVATE_KEY: ${VAPID_PRIVATE_KEY:-}
+      VAPID_SUBJECT: mailto:${ACME_EMAIL}
+      SMTP_HOST: ${SMTP_HOST:-}
+      SMTP_PORT: ${SMTP_PORT:-465}
+      SMTP_USER: ${SMTP_USER:-}
+      SMTP_PASS: ${SMTP_PASS:-}
+      SMTP_FROM: ${SMTP_FROM:-}
     volumes:
       - media:/data/media
     deploy:

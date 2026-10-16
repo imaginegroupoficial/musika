@@ -5,6 +5,7 @@ import RpcButton from '@/components/RpcButton';
 import SettingsForm from './settings-form';
 import AppearanceForm from './appearance-form';
 import TextsForm from './texts-form';
+import BroadcastForm from './broadcast-form';
 import { BannerActions, BannerForm } from './banners';
 import { getSite } from '@/lib/site';
 import { adMediaUrl, brl, formatCount } from '@/lib/media';
@@ -21,6 +22,7 @@ const tabs = [
   ['denuncias', 'Denúncias'],
   ['repasses', 'Repasses'],
   ['banners', 'Banners'],
+  ['avisos', 'Avisos'],
   ['aparencia', 'Aparência'],
   ['textos', 'Textos'],
   ['config', 'Preços e regras'],
@@ -198,7 +200,7 @@ export default async function Admin({ searchParams }: { searchParams: { aba?: st
     const { data } = await supabase.from('house_banners').select('*').order('placement').order('position');
     body = (
       <>
-        <p className="mb-5 max-w-[64ch] text-nevoa">Banners da casa. O carrossel fica no topo da página inicial. A faixa aparece no lugar dos anúncios quando não há campanha paga rodando; sem nenhum dos dois, aparece o convite para anunciar.</p>
+        <p className="mb-5 max-w-[64ch] text-nevoa">Banners da casa. O <strong>carrossel</strong> fica no topo da página inicial, para todo mundo. A <strong>faixa</strong> aparece no lugar dos anúncios (página inicial, artista e CD) quando não há campanha paga rodando; assinantes Premium não veem faixas. <a href="/" target="_blank" className="font-semibold text-sol">Ver a página inicial</a></p>
         <BannerForm />
         <ul className="mt-8 divide-y divide-palco">
           {(data || []).map((b) => (
@@ -206,9 +208,17 @@ export default async function Admin({ searchParams }: { searchParams: { aba?: st
               {b.image_path ? <img src={adMediaUrl(b.image_path) || ''} alt="" className="h-14 w-36 rounded-lg object-cover" /> : <span className="grid h-14 w-36 place-items-center rounded-lg bg-chita text-xs font-bold text-noite">sem imagem</span>}
               <div className="min-w-0 flex-1">
                 <p className="truncate font-semibold">{b.title}</p>
-                <p className="text-sm text-nevoa">{b.placement === 'carrossel' ? 'Carrossel' : 'Faixa'}, ordem {b.position}{b.link_url ? `, ${b.link_url}` : ''}{b.ends_at ? `, até ${new Date(b.ends_at).toLocaleDateString('pt-BR')}` : ''}</p>
+                <p className="text-sm text-nevoa">{b.placement === 'carrossel' ? 'Carrossel no topo da página inicial' : 'Faixa no lugar dos anúncios (início, artista e CD)'}, ordem {b.position}{b.link_url ? `, ${b.link_url}` : ''}{b.ends_at ? `, até ${new Date(b.ends_at).toLocaleString('pt-BR', { dateStyle: 'short', timeStyle: 'short' })}` : ''}</p>
+                {(() => {
+                  const now = new Date();
+                  const st = !b.active ? ['Fora do ar', 'bg-palco text-nevoa']
+                    : b.ends_at && new Date(b.ends_at) <= now ? ['Vencido: mude a data ou exclua', 'bg-chita/20 text-chita']
+                    : b.starts_at && new Date(b.starts_at) > now ? ['Agendado', 'bg-palco text-luar']
+                    : ['No ar', 'bg-mandacaru/20 text-mandacaru'];
+                  return <span className={`mt-1 inline-block rounded-full px-2.5 py-0.5 text-xs font-bold ${st[1]}`}>{st[0]}</span>;
+                })()}
               </div>
-              <BannerActions id={b.id} active={b.active} />
+              <BannerActions id={b.id} active={b.active} placement={b.placement} expired={!!b.ends_at && new Date(b.ends_at) <= new Date()} />
             </li>
           ))}
           {!data?.length && <li className="py-3 text-nevoa">Nenhum banner ainda.</li>}
@@ -227,6 +237,16 @@ export default async function Admin({ searchParams }: { searchParams: { aba?: st
   if (aba === 'textos') {
     const { data } = await supabase.from('settings').select('value').eq('key', 'texts').maybeSingle();
     body = <TextsForm overrides={(data?.value as Record<string, string>) || {}} />;
+  }
+
+  if (aba === 'avisos') {
+    const { count } = await supabase.from('profiles').select('id', { count: 'exact', head: true });
+    body = (
+      <>
+        <p className="mb-5 max-w-[64ch] text-nevoa">Mande um aviso para o sino de todos os {formatCount(count || 0)} usuários. Quem ativou recebe também no celular, e quem pediu recebe por e-mail. Lançamentos, shows e posts dos artistas já viram aviso sozinhos para os seguidores.</p>
+        <BroadcastForm />
+      </>
+    );
   }
 
   if (aba === 'config') {

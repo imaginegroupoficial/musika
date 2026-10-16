@@ -4,6 +4,7 @@ import { spawn } from 'node:child_process';
 import { mkdir, rm, writeFile, rename, readdir } from 'node:fs/promises';
 import { join } from 'node:path';
 import { tmpdir } from 'node:os';
+import { deliverNotifications, notifyStatus } from './notify.mjs';
 
 const SUPABASE_URL = process.env.SUPABASE_URL;
 const KEY = process.env.SUPABASE_SERVICE_ROLE_KEY;
@@ -97,6 +98,24 @@ async function processJob(job) {
   }
 }
 
+// notificações rodam em paralelo à conversão, a cada 15 s (ou na hora, se ainda houver fila)
+async function notificationLoop() {
+  let lastPrune = 0;
+  while (!stopping) {
+    let sent = 0;
+    try {
+      sent = await deliverNotifications(sb);
+      if (Date.now() - lastPrune > 24 * 60 * 60 * 1000) {
+        lastPrune = Date.now();
+        await sb.rpc('prune_notifications');
+      }
+    } catch (err) {
+      console.error('notificações:', err.message);
+    }
+    if (sent < 200) await sleep(15000);
+  }
+}
+
 async function main() {
   try {
     await mkdir(join(MEDIA_DIR, 'hls'), { recursive: true });
@@ -107,6 +126,8 @@ async function main() {
   const { error: ping } = await sb.from('transcode_jobs').select('id', { count: 'exact', head: true });
   if (ping) console.error('não consegui falar com o Supabase:', ping.message);
   console.log('musika worker pronto');
+  console.log(notifyStatus());
+  notificationLoop();
   let lastHousekeeping = 0;
   while (!stopping) {
     // a cada 5 min: encerra impulsionamentos e campanhas vencidas e expira Pix não pagos

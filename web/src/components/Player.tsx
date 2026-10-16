@@ -32,7 +32,16 @@ function attribution() {
   }
 }
 
-export default function Player({ isPremium = false, adEvery = 3 }: { isPremium?: boolean; adEvery?: number }) {
+export default function Player({ isPremium = false, adEvery = 3, audio: audioPref = 'auto' }: { isPremium?: boolean; adEvery?: number; audio?: 'auto' | 'economia' | 'alta' }) {
+  // qualidade escolhida em Minha conta > Reprodução
+  const quality = useRef(audioPref);
+  useEffect(() => {
+    const read = () => { try { const v = localStorage.getItem('mk_audio'); if (v === 'auto' || v === 'economia' || v === 'alta') quality.current = v; } catch {} };
+    quality.current = audioPref;
+    try { localStorage.setItem('mk_audio', audioPref); } catch {}
+    window.addEventListener('mk:audio', read);
+    return () => window.removeEventListener('mk:audio', read);
+  }, [audioPref]);
   const router = useRouter();
   const t = useT();
   const audioRef = useRef<HTMLAudioElement>(null);
@@ -113,11 +122,16 @@ export default function Player({ isPremium = false, adEvery = 3 }: { isPremium?:
         import('hls.js').then(({ default: HlsLib }) => {
           if (loadedId.current !== t.id) return;
           if (!HlsLib.isSupported()) return toast('Este navegador não toca HLS');
-          const hls = new HlsLib({ maxBufferLength: 30 });
+          const q = quality.current;
+          const hls = new HlsLib({ maxBufferLength: 30, startLevel: q === 'economia' ? 0 : -1 });
           hlsRef.current = hls;
           hls.loadSource(t.hls);
           hls.attachMedia(audio);
-          hls.on(HlsLib.Events.MANIFEST_PARSED, startPlayback);
+          hls.on(HlsLib.Events.MANIFEST_PARSED, () => {
+            if (q === 'economia') hls.autoLevelCapping = 0;
+            if (q === 'alta') hls.currentLevel = hls.levels.length - 1;
+            startPlayback();
+          });
           hls.on(HlsLib.Events.ERROR, (_e, data) => {
             if (!data.fatal) return;
             if (data.type === HlsLib.ErrorTypes.NETWORK_ERROR) hls.startLoad();

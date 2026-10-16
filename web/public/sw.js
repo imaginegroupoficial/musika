@@ -1,5 +1,5 @@
 // Musika service worker: app instalável e cache de segmentos de áudio já ouvidos
-const STATIC = 'musika-static-v1';
+const STATIC = 'musika-static-v2';
 const AUDIO = 'musika-audio-v1';
 const AUDIO_MAX = 400;
 
@@ -46,4 +46,36 @@ self.addEventListener('fetch', (event) => {
       }),
     );
   }
+});
+
+// Notificações no celular/computador
+self.addEventListener('push', (event) => {
+  let d = {};
+  try { d = event.data ? event.data.json() : {}; } catch { d = { title: event.data && event.data.text() }; }
+  const title = d.title || 'Musika';
+  event.waitUntil(
+    self.registration.showNotification(title, {
+      body: d.body || '',
+      icon: d.icon || '/icon-192.png',
+      badge: '/badge-96.png',
+      tag: d.tag,
+      data: { url: d.url || '/' },
+    }),
+  );
+});
+
+self.addEventListener('notificationclick', (event) => {
+  event.notification.close();
+  const url = (event.notification.data && event.notification.data.url) || '/';
+  event.waitUntil(
+    self.clients.matchAll({ type: 'window', includeUncontrolled: true }).then((list) => {
+      for (const c of list) {
+        if (new URL(c.url).origin === self.location.origin && 'focus' in c) {
+          c.navigate(url);
+          return c.focus();
+        }
+      }
+      return self.clients.openWindow(url);
+    }),
+  );
 });
