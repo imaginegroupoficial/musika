@@ -12,7 +12,7 @@ export const revalidate = 0;
 
 export default async function PlaylistPage({ params }: { params: { id: string } }) {
   const { supabase, user, profile } = await getSessionProfile();
-  const { data: p } = await supabase.from('playlists').select('*, profiles(username, display_name)').eq('id', params.id).maybeSingle();
+  const { data: p } = await supabase.from('playlists').select('*, profiles!playlists_owner_id_fkey(username, display_name)').eq('id', params.id).maybeSingle();
   if (!p) notFound();
   const { data: items } = await supabase
     .from('playlist_tracks')
