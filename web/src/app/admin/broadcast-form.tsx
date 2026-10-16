@@ -21,7 +21,7 @@ export default function BroadcastForm() {
   };
   return (
     <form onSubmit={send} className="grid max-w-2xl gap-3 rounded-capa border border-palco bg-lona p-5">
-      <label className="block"><span className="mb-1 block text-sm font-medium">Título</span><input required maxLength={90} value={f.title} onChange={(e) => setF({ ...f, title: e.target.value })} className="field" placeholder="Ex.: O São João do Musika começou" /></label>
+      <label className="block"><span className="mb-1 block text-sm font-medium">Título</span><input required maxLength={90} value={f.title} onChange={(e) => setF({ ...f, title: e.target.value })} className="field" placeholder="Ex.: O São João do Paredão Play começou" /></label>
       <label className="block"><span className="mb-1 block text-sm font-medium">Texto (opcional)</span><textarea rows={3} maxLength={240} value={f.body} onChange={(e) => setF({ ...f, body: e.target.value })} className="field" /></label>
       <div className="grid gap-3 sm:grid-cols-[1fr_160px]">
         <label className="block"><span className="mb-1 block text-sm font-medium">Link (opcional)</span><input value={f.link} onChange={(e) => setF({ ...f, link: e.target.value })} className="field" placeholder="/top ou https://..." /></label>

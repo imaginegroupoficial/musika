@@ -37,7 +37,7 @@ function Form() {
     if (res.error) {
       const msg = res.error.message.toLowerCase();
       setError(
-        msg.includes('not confirmed') ? 'Confirme seu e-mail antes de entrar. Procure o e-mail do Musika na caixa de entrada e no spam.'
+        msg.includes('not confirmed') ? 'Confirme seu e-mail antes de entrar. Procure o e-mail do Paredão Play na caixa de entrada e no spam.'
         : msg.includes('invalid login') ? 'E-mail ou senha não conferem.'
         : msg.includes('already registered') ? 'Esse e-mail já tem conta. Entre com a senha.'
         : msg.includes('sending') && msg.includes('email') ? 'Não conseguimos enviar o e-mail de confirmação agora. Tente de novo em alguns minutos.'
@@ -69,6 +69,7 @@ function Form() {
 
   return (
     <div className="mx-auto max-w-md py-10">
+      <img src="/brand/logo.png" alt="Paredão Play" className="mx-auto mb-10 h-32 w-auto" />
       {linkError && <p className="mb-6 rounded-lg bg-chita/15 px-4 py-3 text-sm">Esse link já foi usado ou venceu. Entre com sua senha ou peça um link novo.</p>}
       <h1 className="font-display text-5xl font-extrabold leading-[0.95] tracking-tight">
         {mode === 'entrar' ? tx('login_title') : tx('signup_title')}

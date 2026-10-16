@@ -64,7 +64,7 @@ export default function SettingsForm({ settings }: { settings: S }) {
         {money.map(([k, l]) => field(k, l))}
         {field('premium_days', 'Dias de Premium por pagamento', '1')}
         {field('ad_every_n_tracks', 'Anúncio em áudio a cada quantas faixas', '1')}
-        {field('fanclub_fee_pct', 'Taxa do Musika no fã-clube (%)', '1')}
+        {field('fanclub_fee_pct', 'Taxa do Paredão Play no fã-clube (%)', '1')}
       </section>
       <section>
         <h2 className="mb-3 font-display text-xl font-bold">Impulsionamento, preço por dia (R$)</h2>

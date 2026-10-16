@@ -15,10 +15,11 @@ const config: Config = {
         sol: v('primary'),
         chita: v('accent'),
         mandacaru: v('success'),
+        'sobre-sol': v('on-primary'),
       },
       fontFamily: {
-        display: ['"Archivo Variable"', 'Archivo', 'system-ui', 'sans-serif'],
-        body: ['"Archivo Variable"', 'Archivo', 'system-ui', 'sans-serif'],
+        display: ['"Montserrat Variable"', 'Montserrat', 'system-ui', 'sans-serif'],
+        body: ['"Montserrat Variable"', 'Montserrat', 'system-ui', 'sans-serif'],
       },
       borderRadius: { capa: '14px' },
     },

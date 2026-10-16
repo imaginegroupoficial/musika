@@ -180,7 +180,7 @@ export default function AccountForms({ email, pendingEmail, profile, premiumUnti
           <Toggle on={prefs.n_lancamentos} onChange={(v) => setPref('n_lancamentos', v)} label="Lançamentos" hint="Quando um artista que você segue lançar CD ou single" />
           <Toggle on={prefs.n_shows} onChange={(v) => setPref('n_shows', v)} label="Shows" hint="Show novo marcado e lembrete na véspera, se for no seu estado" />
           <Toggle on={prefs.n_posts} onChange={(v) => setPref('n_posts', v)} label="Mural dos artistas" hint="Posts dos artistas que você segue e do fã-clube" />
-          <Toggle on={prefs.n_avisos} onChange={(v) => setPref('n_avisos', v)} label="Novidades do Musika" hint="Avisos importantes e promoções da plataforma" />
+          <Toggle on={prefs.n_avisos} onChange={(v) => setPref('n_avisos', v)} label="Novidades do Paredão Play" hint="Avisos importantes e promoções da plataforma" />
           <Toggle on={prefs.push} onChange={(v) => setPref('push', v)} label="Avisos no celular e no computador" hint="Desligue para receber só aqui no site" />
           <Toggle on={prefs.email} onChange={(v) => setPref('email', v)} label="Também por e-mail" hint="Lançamentos, shows e novidades chegam no seu e-mail" />
         </div>

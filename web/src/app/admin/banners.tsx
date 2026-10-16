@@ -40,7 +40,7 @@ export function BannerForm() {
 
   return (
     <form onSubmit={save} className="grid gap-3 rounded-capa border border-palco bg-lona p-5 sm:grid-cols-2">
-      <label className="block"><span className="mb-1 block text-sm font-medium">Título</span><input required value={f.title} onChange={(e) => setF({ ...f, title: e.target.value })} className="field" placeholder="Ex.: São João no Musika" /></label>
+      <label className="block"><span className="mb-1 block text-sm font-medium">Título</span><input required value={f.title} onChange={(e) => setF({ ...f, title: e.target.value })} className="field" placeholder="Ex.: São João no Paredão Play" /></label>
       <label className="block"><span className="mb-1 block text-sm font-medium">Onde aparece</span>
         <select value={f.placement} onChange={(e) => setF({ ...f, placement: e.target.value })} className="field">
           <option value="carrossel">Carrossel no topo da página inicial (1600 x 500)</option>

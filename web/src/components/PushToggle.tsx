@@ -68,9 +68,9 @@ export default function PushToggle({ vapidKey, compact = false }: { vapidKey: st
   if (compact && state !== 'desligado') return null;
 
   const msg: Record<string, string> = {
-    'sem-suporte': 'Este navegador não recebe notificações. No celular, use o Chrome (Android) ou instale o Musika na tela inicial (iPhone).',
-    ios: 'No iPhone, toque em Compartilhar e depois em "Adicionar à Tela de Início". Abra o Musika por lá e ative os avisos.',
-    bloqueado: 'As notificações estão bloqueadas para o Musika. Libere nas configurações do navegador (cadeado ao lado do endereço) e volte aqui.',
+    'sem-suporte': 'Este navegador não recebe notificações. No celular, use o Chrome (Android) ou instale o Paredão Play na tela inicial (iPhone).',
+    ios: 'No iPhone, toque em Compartilhar e depois em "Adicionar à Tela de Início". Abra o Paredão Play por lá e ative os avisos.',
+    bloqueado: 'As notificações estão bloqueadas para o Paredão Play. Libere nas configurações do navegador (cadeado ao lado do endereço) e volte aqui.',
   };
 
   return (

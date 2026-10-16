@@ -28,15 +28,15 @@ const cover = (path) => (path && PUBLIC_SB ? `${PUBLIC_SB}/storage/v1/object/pub
 
 function emailHtml(n) {
   const img = cover(n.image_path);
-  return `<!doctype html><html lang="pt-BR"><body style="margin:0;background:#F4F1EA;font-family:Arial,Helvetica,sans-serif;color:#14121F">
+  return `<!doctype html><html lang="pt-BR"><body style="margin:0;background:#0B0B0F;font-family:Arial,Helvetica,sans-serif;color:#F5F5F5">
 <table role="presentation" width="100%" cellpadding="0" cellspacing="0"><tr><td align="center" style="padding:32px 16px">
-<table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="max-width:520px;background:#ffffff;border-radius:24px;overflow:hidden">
-<tr><td style="background:#3B2BFF;padding:22px 28px;color:#ffffff;font-weight:900;font-size:26px;letter-spacing:-0.5px;text-transform:uppercase">Musika</td></tr>
+<table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="max-width:520px;background:#16161D;border:1px solid #26262F;border-radius:20px;overflow:hidden">
+<tr><td style="padding:24px 28px 0"><img src="${SITE}/email/logo.png" width="237" height="60" alt="Paredão Play" style="display:block;border:0"></td></tr>
 ${img ? `<tr><td style="padding:28px 28px 0"><img src="${esc(img)}" width="200" height="200" alt="" style="display:block;border-radius:16px;width:200px;height:200px;object-fit:cover"></td></tr>` : ''}
 <tr><td style="padding:24px 28px 8px;font-size:24px;line-height:1.2;font-weight:800">${esc(n.title)}</td></tr>
-${n.body ? `<tr><td style="padding:0 28px 8px;font-size:16px;line-height:1.5;color:#4A4760">${esc(n.body)}</td></tr>` : ''}
-<tr><td style="padding:20px 28px 32px"><a href="${esc(abs(n.link))}" style="display:inline-block;background:#3B2BFF;color:#ffffff;text-decoration:none;font-weight:700;padding:14px 26px;border-radius:999px">Abrir no Musika</a></td></tr>
-<tr><td style="padding:18px 28px;background:#F4F1EA;font-size:12px;color:#6B6880">Você recebe este e-mail porque ativou avisos por e-mail. Para parar, desligue em <a href="${SITE}/conta#notificacoes" style="color:#3B2BFF">Minha conta</a>.</td></tr>
+${n.body ? `<tr><td style="padding:0 28px 8px;font-size:16px;line-height:1.5;color:#B4B4C0">${esc(n.body)}</td></tr>` : ''}
+<tr><td style="padding:20px 28px 32px"><a href="${esc(abs(n.link))}" style="display:inline-block;background:#FF2D55;color:#ffffff;text-decoration:none;font-weight:700;padding:14px 26px;border-radius:999px">Abrir no Paredão Play</a></td></tr>
+<tr><td style="padding:18px 28px;background:#0B0B0F;font-size:12px;color:#9C9CA8">Você recebe este e-mail porque ativou avisos por e-mail. Para parar, desligue em <a href="${SITE}/conta#notificacoes" style="color:#FF2D55">Minha conta</a>.</td></tr>
 </table></td></tr></table></body></html>`;
 }
 
@@ -55,7 +55,7 @@ async function sendPush(sb, n) {
 
 async function sendEmail(n) {
   try {
-    await mailer.sendMail({ from: `Musika <${SMTP_FROM}>`, to: n.email, subject: n.title, html: emailHtml(n), text: `${n.title}\n\n${n.body || ''}\n\n${abs(n.link)}` });
+    await mailer.sendMail({ from: `Paredão Play <${SMTP_FROM}>`, to: n.email, subject: n.title, html: emailHtml(n), text: `${n.title}\n\n${n.body || ''}\n\n${abs(n.link)}` });
   } catch (err) {
     console.error('e-mail:', err.message);
   }

@@ -181,7 +181,7 @@ export default async function Admin({ searchParams }: { searchParams: { aba?: st
     });
     body = (
       <>
-        <p className="max-w-[60ch] text-nevoa">Valores líquidos do fã-clube, já sem a taxa do Musika. Faça o Pix para o artista e marque como pago.</p>
+        <p className="max-w-[60ch] text-nevoa">Valores líquidos do fã-clube, já sem a taxa do Paredão Play. Faça o Pix para o artista e marque como pago.</p>
         <ul className="mt-4 divide-y divide-lona">
           {[...by.entries()].map(([id, a]) => (
             <li key={id} className="flex flex-wrap items-center gap-3 py-3">
@@ -231,7 +231,7 @@ export default async function Admin({ searchParams }: { searchParams: { aba?: st
     const { data } = await supabase.from('settings').select('key, value').in('key', ['theme', 'brand']);
     const m = Object.fromEntries((data || []).map((r) => [r.key, r.value]));
     const { logoUrl } = await getSite();
-    body = <AppearanceForm theme={(m.theme as object) || {}} brand={{ name: 'Musika', logo_path: null, ...((m.brand as object) || {}) }} logoUrl={logoUrl} />;
+    body = <AppearanceForm theme={(m.theme as object) || {}} brand={{ name: 'Paredão Play', logo_path: null, ...((m.brand as object) || {}) }} logoUrl={logoUrl} />;
   }
 
   if (aba === 'textos') {

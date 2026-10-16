@@ -4,7 +4,7 @@ import { brl } from '@/lib/media';
 import { getSite } from '@/lib/site';
 import { fill } from '@/lib/texts';
 
-export const metadata = { title: 'Musika Premium' };
+export const metadata = { title: 'Paredão Play Premium' };
 export const revalidate = 0;
 
 export default async function PremiumPage() {

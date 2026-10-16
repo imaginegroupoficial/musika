@@ -30,7 +30,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const img = coverUrl(d.release.cover_path);
   return {
     title: `${d.release.title}, ${d.artist.name}`,
-    description: `Ouça e baixe grátis ${d.release.title} de ${d.artist.name} no Musika.`,
+    description: `Ouça e baixe grátis ${d.release.title} de ${d.artist.name} no Paredão Play.`,
     openGraph: { images: img ? [img] : [], type: 'music.album' },
   };
 }

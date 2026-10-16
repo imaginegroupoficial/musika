@@ -1,19 +1,13 @@
 {
-  "name": "Musika",
-  "short_name": "Musika",
-  "description": "Ouça, baixe e apoie seus artistas. Ganhe pontos e suba no ranking de fãs.",
+  "name": "Paredão Play",
+  "short_name": "Paredão Play",
+  "description": "Sua música, sem limites. Ouça, baixe e apoie seus artistas, ganhe pontos e suba no ranking de fãs.",
   "start_url": "/?utm_source=app",
   "display": "standalone",
-  "background_color": "#F1F0F6",
-  "theme_color": "#3B2BFF",
+  "background_color": "#0B0B0F",
+  "theme_color": "#0B0B0F",
   "lang": "pt-BR",
   "icons": [
-    {
-      "src": "/icon.svg",
-      "sizes": "any",
-      "type": "image/svg+xml",
-      "purpose": "any"
-    },
     {
       "src": "/icon-192.png",
       "sizes": "192x192",
@@ -25,6 +19,12 @@
       "sizes": "512x512",
       "type": "image/png",
       "purpose": "any"
+    },
+    {
+      "src": "/icon-maskable-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable"
     }
   ]
 }

@@ -12,7 +12,7 @@ const labels: Record<keyof ThemeColors, string> = {
 export default function AppearanceForm({ theme, brand, logoUrl }: { theme: { preset?: string; colors?: Partial<ThemeColors> }; brand: { name: string; logo_path: string | null }; logoUrl: string | null }) {
   const router = useRouter();
   const toast = usePlayer((s) => s.toast);
-  const [preset, setPreset] = useState(theme.preset || 'cartaz');
+  const [preset, setPreset] = useState(theme.preset || 'play');
   const [custom, setCustom] = useState<Partial<ThemeColors>>(theme.colors || {});
   const [name, setName] = useState(brand.name);
   const [logo, setLogo] = useState<File | null>(null);
@@ -33,7 +33,7 @@ export default function AppearanceForm({ theme, brand, logoUrl }: { theme: { pre
       logo_path = path;
     }
     const r1 = await supabase.rpc('admin_set_setting', { p_key: 'theme', p_value: { preset, colors: custom } });
-    const r2 = await supabase.rpc('admin_set_setting', { p_key: 'brand', p_value: { name: name.trim() || 'Musika', logo_path } });
+    const r2 = await supabase.rpc('admin_set_setting', { p_key: 'brand', p_value: { name: name.trim() || 'Paredão Play', logo_path } });
     setBusy(false);
     if (r1.error || r2.error) return toast('Não foi possível salvar');
     toast('Aparência salva');

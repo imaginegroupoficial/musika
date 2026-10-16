@@ -1,4 +1,5 @@
 'use client';
+import { fill } from '@/lib/texts';
 import { useEffect, useState } from 'react';
 import { useParams } from 'next/navigation';
 import { createClient } from '@/lib/supabase/client';
@@ -32,7 +33,7 @@ export default function Telao() {
     <div className="flex min-h-[70vh] flex-col items-center justify-center text-center">
       <p className="cartaz text-3xl md:text-6xl">{t('telao_title')}</p>
       {qr ? <img src={qr} alt="QR Code de check-in" className="mt-8 w-[min(70vw,460px)] rounded-3xl" /> : <div className="mt-8 h-[460px] w-[460px] max-w-[70vw] animate-pulse rounded-3xl bg-lona" />}
-      <p className="mt-6 text-nevoa">{t('telao_hint')}</p>
+      <p className="mt-6 text-nevoa">{fill(t('telao_hint'), { site: typeof window === 'undefined' ? '' : window.location.host })}</p>
       <p className="font-display text-6xl font-extrabold tracking-[0.25em] text-sol md:text-8xl">{code || '······'}</p>
     </div>
   );

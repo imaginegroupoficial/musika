@@ -18,7 +18,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   if (!data) return { title: 'Artista não encontrado' };
   return {
     title: data.name,
-    description: data.bio || `Ouça e baixe os CDs de ${data.name}${data.genre ? `, ${data.genre}` : ''} no Musika.`,
+    description: data.bio || `Ouça e baixe os CDs de ${data.name}${data.genre ? `, ${data.genre}` : ''} no Paredão Play.`,
   };
 }
 
@@ -65,7 +65,7 @@ export default async function ArtistPage({ params }: Props) {
             <FollowButton artistId={artist.id} initial={!!following.data} loggedIn={!!user} />
             {artist.booking_whatsapp && (
               <a
-                href={`https://wa.me/${artist.booking_whatsapp.replace(/\D/g, '')}?text=${encodeURIComponent(`Olá! Vi o ${artist.name} no Musika e quero contratar um show.`)}`}
+                href={`https://wa.me/${artist.booking_whatsapp.replace(/\D/g, '')}?text=${encodeURIComponent(`Olá! Vi o ${artist.name} no Paredão Play e quero contratar um show.`)}`}
                 target="_blank"
                 rel="noopener"
                 className="inline-flex h-12 items-center rounded-full bg-mandacaru px-6 font-semibold text-noite"

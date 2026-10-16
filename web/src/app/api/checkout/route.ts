@@ -3,7 +3,7 @@ import { createAdminClient, createClient } from '@/lib/supabase/server';
 import { createPixOrder, pagarmeEnabled, validCpf } from '@/lib/pagarme';
 
 export async function POST(request: Request) {
-  if (!pagarmeEnabled()) return NextResponse.json({ error: 'Pagamentos ainda não foram ativados no Musika.' }, { status: 503 });
+  if (!pagarmeEnabled()) return NextResponse.json({ error: 'Pagamentos ainda não foram ativados no Paredão Play.' }, { status: 503 });
   const body = await request.json().catch(() => null);
   const { purpose, refId, name, cpf, phone } = body || {};
   if (!['premium', 'fanclub', 'boost', 'ad_campaign'].includes(purpose)) return NextResponse.json({ error: 'Pagamento inválido' }, { status: 400 });

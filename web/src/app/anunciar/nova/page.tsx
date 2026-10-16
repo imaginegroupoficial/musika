@@ -167,7 +167,7 @@ export default function NovaCampanha() {
       </div>
       <p className="mt-3 text-nevoa">
         Cerca de <strong className="text-luar">{estimated.toLocaleString('pt-BR')}</strong> {kind === 'audio' ? 'execuções do áudio' : 'exibições do banner'} a {brl(cpm)} por mil.
-        Depois do Pix, a equipe do Musika revisa o anúncio antes de ir ao ar.
+        Depois do Pix, a equipe do Paredão Play revisa o anúncio antes de ir ao ar.
       </p>
 
       {error && <p className="mt-6 rounded-lg bg-chita/15 px-4 py-3 text-sm" role="alert">{error}</p>}

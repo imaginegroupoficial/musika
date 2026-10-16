@@ -1,4 +1,5 @@
 'use client';
+import { SITE_HOST } from '@/lib/env';
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { createClient } from '@/lib/supabase/client';
@@ -44,7 +45,7 @@ export default function NovoArtista() {
         <label className="block">
           <span className="mb-1 block text-sm font-medium">Endereço da sua página</span>
           <div className="flex items-center rounded-xl border border-palco bg-lona pl-4 focus-within:border-sol">
-            <span className="text-nevoa">musika.tech/</span>
+            <span className="text-nevoa">{SITE_HOST}/</span>
             <input
               required
               pattern="[a-z0-9][a-z0-9\-]{1,40}"

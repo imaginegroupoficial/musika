@@ -20,7 +20,7 @@ export default async function FaClube({ params }: { params: { artistId: string }
         <div><dt className="text-sm text-nevoa">A receber</dt><dd className="font-display text-3xl font-extrabold">{brl(m.pending_cents)}</dd></div>
         <div><dt className="text-sm text-nevoa">Já repassado</dt><dd className="font-display text-3xl font-extrabold">{brl(m.paid_cents)}</dd></div>
       </dl>
-      <p className="mt-2 text-sm text-nevoa">Valores já descontada a taxa do Musika. O repasse é feito por Pix pela equipe do Musika.</p>
+      <p className="mt-2 text-sm text-nevoa">Valores já descontada a taxa do Paredão Play. O repasse é feito por Pix pela equipe do Paredão Play.</p>
       <div className="mt-8 grid gap-6 lg:grid-cols-2">
         <FanClubPlanForm artistId={params.artistId} plan={plan} />
         <PostForm artistId={params.artistId} />

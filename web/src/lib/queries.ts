@@ -9,10 +9,11 @@ type RelJoin = {
   kind: string;
   cover_path: string | null;
   publish_at: string;
-  artists: { slug: string; name: string; verified: boolean } | null;
+  genre?: string | null;
+  artists: { slug: string; name: string; verified: boolean; genre?: string | null } | null;
 };
 
-export const releaseSelect = 'id, title, slug, kind, cover_path, publish_at, artists!inner(slug, name, verified)';
+export const releaseSelect = 'id, title, slug, kind, genre, cover_path, publish_at, artists!inner(slug, name, verified, genre)';
 
 export function mapRelease(r: RelJoin): ReleaseCardData {
   return {
@@ -24,6 +25,8 @@ export function mapRelease(r: RelJoin): ReleaseCardData {
     artist_slug: r.artists?.slug ?? '',
     artist_name: r.artists?.name ?? '',
     verified: r.artists?.verified ?? false,
+    genre: r.genre || r.artists?.genre || null,
+    publish_at: r.publish_at,
   };
 }
 

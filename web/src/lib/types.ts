@@ -23,4 +23,6 @@ export type ReleaseCardData = {
   verified?: boolean;
   plays?: number;
   plays_recent?: number;
+  genre?: string | null;
+  publish_at?: string;
 };

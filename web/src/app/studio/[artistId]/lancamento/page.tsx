@@ -109,7 +109,7 @@ export default function NovoLancamento() {
   return (
     <form onSubmit={publish} className="max-w-3xl">
       <h1 className="font-display text-5xl font-extrabold leading-[0.95] tracking-tight">Novo lançamento</h1>
-      <p className="mt-3 text-nevoa">Envie MP3, M4A, WAV ou FLAC. O Musika converte cada faixa para tocar rápido até no 3G.</p>
+      <p className="mt-3 text-nevoa">Envie MP3, M4A, WAV ou FLAC. O Paredão Play converte cada faixa para tocar rápido até no 3G.</p>
 
       <div className="mt-8 grid gap-6 md:grid-cols-[200px_1fr]">
         <label className="block cursor-pointer">

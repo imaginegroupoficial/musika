@@ -1,4 +1,4 @@
-// Musika service worker: app instalável e cache de segmentos de áudio já ouvidos
+// Paredão Play service worker: app instalável e cache de segmentos de áudio já ouvidos
 const STATIC = 'musika-static-v2';
 const AUDIO = 'musika-audio-v1';
 const AUDIO_MAX = 400;
@@ -52,7 +52,7 @@ self.addEventListener('fetch', (event) => {
 self.addEventListener('push', (event) => {
   let d = {};
   try { d = event.data ? event.data.json() : {}; } catch { d = { title: event.data && event.data.text() }; }
-  const title = d.title || 'Musika';
+  const title = d.title || 'Paredão Play';
   event.waitUntil(
     self.registration.showNotification(title, {
       body: d.body || '',

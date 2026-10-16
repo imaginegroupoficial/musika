@@ -112,7 +112,7 @@ export default function Sala() {
         <p className="text-sm font-semibold text-chita">{isHost ? 'Você está no comando' : 'Ouvindo junto'}{connected ? '' : ', conectando…'}</p>
         <h1 className="mt-1 font-display text-[clamp(2.5rem,7vw,5rem)] font-extrabold leading-[0.9] tracking-tight">Sala {code.toUpperCase()}</h1>
         <p className="mt-3 max-w-[56ch] text-nevoa">
-          {isHost ? 'Toque qualquer música no Musika: quem estiver na sala ouve a mesma coisa, no mesmo segundo.' : 'O anfitrião escolhe as músicas. Seu player acompanha sozinho.'}
+          {isHost ? 'Toque qualquer música no Paredão Play: quem estiver na sala ouve a mesma coisa, no mesmo segundo.' : 'O anfitrião escolhe as músicas. Seu player acompanha sozinho.'}
         </p>
         <button onClick={copy} className="mt-5 h-12 rounded-full bg-sol px-6 font-semibold text-noite">Copiar link da sala</button>
 

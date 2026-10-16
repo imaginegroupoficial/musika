@@ -1,3 +1,4 @@
+import { SITE_HOST } from '@/lib/env';
 import Link from 'next/link';
 import { redirect } from 'next/navigation';
 import { getSessionProfile } from '@/lib/supabase/server';
@@ -42,19 +43,19 @@ export default async function Retrospectiva({ searchParams }: { searchParams: { 
       <p className="mt-4 text-nevoa">Arraste para o lado e tire print do card para postar.</p>
       <div className="scroll-row -mx-4 mt-6 flex snap-x gap-5 overflow-x-auto px-4 pb-4">
         <div className={`${card} bg-chita text-noite`}>
-          <p className="font-display text-2xl font-bold">{sj ? `Seu São João ${year}` : `Seu ${year} no Musika`}</p>
+          <p className="font-display text-2xl font-bold">{sj ? `Seu São João ${year}` : `Seu ${year} no Paredão Play`}</p>
           <div>
             <p className="font-display text-[88px] font-extrabold leading-none">{formatCount(w.minutes)}</p>
             <p className="font-display text-3xl font-bold">minutos de música</p>
           </div>
-          <p className="font-semibold">{formatCount(w.plays)} faixas tocadas. musika.tech</p>
+          <p className="font-semibold">{formatCount(w.plays)} faixas tocadas. {SITE_HOST}</p>
         </div>
 
         {top && (
           <div className={`${card} bg-sol text-noite`}>
             <p className="font-display text-2xl font-bold">Seu artista número 1</p>
             <p className="font-display text-[64px] font-extrabold leading-[0.9]">{top.name}</p>
-            <p className="font-semibold">{top.plays} plays seus. Você é {lv.name} no Musika.</p>
+            <p className="font-semibold">{top.plays} plays seus. Você é {lv.name} no Paredão Play.</p>
           </div>
         )}
 
@@ -68,7 +69,7 @@ export default async function Retrospectiva({ searchParams }: { searchParams: { 
               </li>
             ))}
           </ol>
-          <p className="text-sm text-nevoa">musika.tech</p>
+          <p className="text-sm text-nevoa">{SITE_HOST}</p>
         </div>
 
         {w.tracks[0] && (
@@ -89,7 +90,7 @@ export default async function Retrospectiva({ searchParams }: { searchParams: { 
             {w.checkins > 0 && <p className="text-2xl font-bold">{w.checkins} {w.checkins === 1 ? 'show' : 'shows'} com check-in</p>}
             <p className="text-2xl font-bold">Nível {lv.name}, {profile?.xp || 0} pontos</p>
           </div>
-          <p className="text-sm text-nevoa">musika.tech</p>
+          <p className="text-sm text-nevoa">{SITE_HOST}</p>
         </div>
       </div>
     </>

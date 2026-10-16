@@ -2,28 +2,26 @@
 @tailwind components;
 @tailwind utilities;
 
-/* Cores padrão (tema Cartaz). O layout sobrescreve com o tema escolhido no /admin. */
+/* Cores padrão (tema Paredão Play). O layout sobrescreve com o tema escolhido no /admin. */
 :root {
-  --c-bg: 241 240 246; --c-surface: 255 255 255; --c-line: 226 224 236; --c-ink: 21 17 43;
-  --c-muted: 95 90 125; --c-primary: 59 43 255; --c-accent: 255 74 139; --c-success: 14 159 110;
+  --c-bg: 11 11 15; --c-surface: 22 22 29; --c-line: 38 38 47; --c-ink: 245 245 245;
+  --c-muted: 156 156 168; --c-primary: 255 45 85; --c-accent: 255 45 85; --c-success: 43 213 118; --c-on-primary: 255 255 255;
 }
 html, body { background: rgb(var(--c-bg)); color: rgb(var(--c-ink)); }
-body { font-family: 'Archivo Variable', 'Archivo', system-ui, sans-serif; font-stretch: 100%; -webkit-font-smoothing: antialiased; }
+body { font-family: 'Montserrat Variable', 'Montserrat', system-ui, sans-serif; -webkit-font-smoothing: antialiased; }
 
-/* A voz do Musika: a mesma família, esticada como letra de cartaz de show */
-h1, h2, h3, .font-display { font-family: 'Archivo Variable', 'Archivo', system-ui, sans-serif; font-stretch: 118%; letter-spacing: -0.015em; }
-h1 { font-stretch: 125%; letter-spacing: -0.03em; }
-.cartaz { text-transform: uppercase; font-stretch: 125%; font-weight: 900; letter-spacing: -0.035em; line-height: 0.86; }
+h1, h2, h3, .font-display { font-family: 'Montserrat Variable', 'Montserrat', system-ui, sans-serif; letter-spacing: -0.02em; }
+h1 { letter-spacing: -0.03em; }
+/* a voz do Paredão Play: caixa alta, peso máximo */
+.cartaz { text-transform: uppercase; font-weight: 900; letter-spacing: -0.03em; line-height: 0.92; }
+/* a assinatura da logo: itálico pesado */
+.marca { font-style: italic; font-weight: 900; text-transform: uppercase; letter-spacing: -0.02em; line-height: 0.85; }
 
-/* céu estrelado só nos temas escuros */
-.tema-escuro .ceu {
-  background-image:
-    radial-gradient(1px 1px at 12% 18%, rgb(var(--c-ink) / .5) 50%, transparent 51%),
-    radial-gradient(1px 1px at 68% 9%, rgb(var(--c-ink) / .4) 50%, transparent 51%),
-    radial-gradient(1.5px 1.5px at 84% 31%, rgb(var(--c-primary) / .6) 50%, transparent 51%),
-    radial-gradient(1px 1px at 37% 42%, rgb(var(--c-ink) / .3) 50%, transparent 51%);
-  background-attachment: fixed;
-}
+/* texto sobre a cor principal (botões vermelhos com letra branca) */
+.bg-sol.text-noite, .bg-sol .text-noite, .bg-chita.text-noite { color: rgb(var(--c-on-primary)); }
+
+/* brilho vermelho de palco */
+.palco-glow { background: radial-gradient(60% 80% at 75% 30%, rgb(var(--c-primary) / .45), transparent 70%), radial-gradient(40% 60% at 95% 90%, rgb(var(--c-primary) / .25), transparent 70%); }
 
 :focus-visible { outline: 2px solid rgb(var(--c-primary)); outline-offset: 2px; border-radius: 6px; }
 

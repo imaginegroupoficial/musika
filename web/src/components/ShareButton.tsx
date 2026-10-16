@@ -8,7 +8,7 @@ export default function ShareButton({ path, title, username, storyHref }: { path
     const url = new URL(path, window.location.origin);
     if (username) url.searchParams.set('ref', username);
     url.searchParams.set('utm_source', 'compartilhado');
-    const text = `Escuta ${title} no Musika`;
+    const text = `Escuta ${title} no Paredão Play`;
     try {
       if (navigator.share) {
         await navigator.share({ title, text, url: url.toString() });

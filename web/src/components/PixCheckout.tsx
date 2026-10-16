@@ -128,7 +128,7 @@ export default function PixCheckout({ purpose, refId, label, amountCents, logged
                     <input required inputMode="tel" value={phone} onChange={(e) => setPhone(maskPhone(e.target.value))} className="field" autoComplete="tel" />
                   </label>
                 </div>
-                <p className="text-xs text-nevoa">O Pagar.me exige CPF e celular para gerar o Pix. O Musika não guarda o seu CPF.</p>
+                <p className="text-xs text-nevoa">O Pagar.me exige CPF e celular para gerar o Pix. O Paredão Play não guarda o seu CPF.</p>
                 {error && <p className="rounded-lg bg-chita/15 px-3 py-2 text-sm" role="alert">{error}</p>}
                 <button disabled={busy} className="h-12 w-full rounded-full bg-sol font-semibold text-noite disabled:opacity-60">
                   {busy ? 'Gerando Pix…' : 'Gerar Pix'}

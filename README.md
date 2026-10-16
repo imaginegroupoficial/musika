@@ -1,4 +1,4 @@
-# Musika
+# Paredão Play
 
 Plataforma de música para artistas independentes e seus fãs.
 
@@ -9,7 +9,7 @@ Plataforma de música para artistas independentes e seus fãs.
 - **Pagamentos**: Pix via Pagar.me para Premium, fã-clube, impulsionamento e campanhas.
 - **Conta e avisos**: foto, bio, cidade, nome de usuário, e-mail, senha e exclusão da conta; qualidade do áudio (automática, economia de dados ou alta). Notificações no sino do site, no celular (Web Push, sem app de loja) e por e-mail para quem ativar: lançamento de quem você segue (na hora da estreia, se for agendado), show marcado, lembrete na véspera para quem é do estado, post no mural, insígnia nova e subida de nível. O admin manda avisos gerais na aba Avisos.
 - **Administração** (`/admin`): visão geral e receita, aprovação de campanhas, pagamentos, verificação de artistas, denúncias, repasses do fã-clube, banners da casa, aparência (tema, cores, nome e logo), textos do site e preços.
-- **Identidade**: tema Cartaz (claro, azul elétrico e rosa) com a fonte Archivo esticada como letra de cartaz de show, hospedada no próprio servidor. Temas Noite de São João e Paredão (escuros) prontos no admin.
+- **Identidade**: Paredão Play, preto (#0B0B0F) e vermelho (#FF2D55), fonte Montserrat hospedada no próprio servidor, logo oficial em `web/public/brand`. Temas Cartaz, Noite de São João e Paredão verde continuam disponíveis no admin, e o admin pode trocar nome e logo.
 
 Tudo roda numa VPS só (Hostinger KVM 8, Ubuntu 24.04) com o domínio `musika.tech`.
 

@@ -4,7 +4,7 @@ import { brl } from '@/lib/media';
 import { campaignStatus } from '@/lib/labels';
 import { getSite } from '@/lib/site';
 
-export const metadata = { title: 'Anunciar no Musika' };
+export const metadata = { title: 'Anunciar no Paredão Play' };
 export const revalidate = 0;
 
 

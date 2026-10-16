@@ -1,10 +1,17 @@
-// Tokens de cor do Musika. Os nomes antigos das classes (noite, lona, sol...) continuam valendo:
+// Tokens de cor da plataforma. Os nomes antigos das classes (noite, lona, sol...) continuam valendo:
 // noite = fundo, lona = superfície, palco = linha, luar = texto, nevoa = texto suave,
 // sol = cor principal, chita = destaque, mandacaru = sucesso/pontos.
 export type ThemeColors = { bg: string; surface: string; line: string; ink: string; muted: string; primary: string; accent: string; success: string };
 export type ThemeSetting = { preset?: string; colors?: Partial<ThemeColors> };
 
+export const DEFAULT_PRESET = 'play';
+
 export const PRESETS: Record<string, { label: string; dark: boolean; colors: ThemeColors }> = {
+  play: {
+    label: 'Paredão Play (preto e vermelho)',
+    dark: true,
+    colors: { bg: '#0B0B0F', surface: '#16161D', line: '#26262F', ink: '#F5F5F5', muted: '#9C9CA8', primary: '#FF2D55', accent: '#FF2D55', success: '#2BD576' },
+  },
   cartaz: {
     label: 'Cartaz (claro)',
     dark: false,
@@ -36,12 +43,14 @@ const luminance = (hex: string) => {
 };
 
 export function resolveTheme(setting: ThemeSetting | null | undefined) {
-  const preset = PRESETS[setting?.preset || 'cartaz'] || PRESETS.cartaz;
+  const preset = PRESETS[setting?.preset || DEFAULT_PRESET] || PRESETS[DEFAULT_PRESET];
   const colors: ThemeColors = { ...preset.colors };
   for (const [k, v] of Object.entries(setting?.colors || {})) {
     if (typeof v === 'string' && /^#[0-9a-f]{6}$/i.test(v)) colors[k as keyof ThemeColors] = v;
   }
   const dark = luminance(colors.bg) < 0.2;
-  const css = `:root{${(Object.keys(colors) as (keyof ThemeColors)[]).map((k) => `--c-${k}:${hexToRgb(colors[k])};`).join('')}color-scheme:${dark ? 'dark' : 'light'};}`;
+  // texto sobre a cor principal: branco quando ela é forte (vermelho, azul), preto quando é clara (amarelo, verde-limão)
+  const onPrimary = luminance(colors.primary) > 0.45 ? '#0B0B0F' : '#FFFFFF';
+  const css = `:root{${(Object.keys(colors) as (keyof ThemeColors)[]).map((k) => `--c-${k}:${hexToRgb(colors[k])};`).join('')}--c-on-primary:${hexToRgb(onPrimary)};color-scheme:${dark ? 'dark' : 'light'};}`;
   return { colors, dark, css };
 }

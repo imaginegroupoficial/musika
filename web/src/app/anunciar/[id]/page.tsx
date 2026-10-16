@@ -37,7 +37,7 @@ export default async function Campanha({ params }: { params: { id: string } }) {
           <div className="mt-4"><PixCheckout purpose="ad_campaign" refId={c.id} label="Pagar com Pix" amountCents={c.budget_cents} loggedIn defaultName={profile?.display_name} /></div>
         </div>
       )}
-      {c.status === 'pending_review' && <p className="mt-6 rounded-capa bg-lona p-5">Pagamento recebido. A equipe do Musika revisa o anúncio em até 1 dia útil.</p>}
+      {c.status === 'pending_review' && <p className="mt-6 rounded-capa bg-lona p-5">Pagamento recebido. A equipe do Paredão Play revisa o anúncio em até 1 dia útil.</p>}
       {c.status === 'rejected' && <p className="mt-6 rounded-capa bg-chita/15 p-5">Campanha recusada{c.review_note ? `: ${c.review_note}` : '.'} Fale com a gente para ajustar e reaproveitar o valor pago.</p>}
       {(c.status === 'active' || c.status === 'paused') && <div className="mt-6"><CampaignPauseButton id={c.id} paused={c.status === 'paused'} /></div>}
 

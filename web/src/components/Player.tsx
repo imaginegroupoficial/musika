@@ -172,7 +172,7 @@ export default function Player({ isPremium = false, adEvery = 3, audio: audioPre
             setAd(a);
             audio.src = a.media_url;
             audio.play().catch(() => setPlaying(false));
-            if ('mediaSession' in navigator) navigator.mediaSession.metadata = new MediaMetadata({ title: `Anúncio: ${a.advertiser}`, artist: 'Musika' });
+            if ('mediaSession' in navigator) navigator.mediaSession.metadata = new MediaMetadata({ title: `Anúncio: ${a.advertiser}`, artist: 'Paredão Play' });
           } else {
             sinceAd.current = 0;
             setAdTick((n) => n + 1);
