@@ -1,4 +1,5 @@
 'use client';
+import Link from 'next/link';
 import { Suspense, useState } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { createClient } from '@/lib/supabase/client';
@@ -10,8 +11,16 @@ function Form() {
   const [name, setName] = useState('');
   const [error, setError] = useState<string | null>(null);
   const [busy, setBusy] = useState(false);
+  const [waiting, setWaiting] = useState<string | null>(null);
   const router = useRouter();
-  const back = useSearchParams().get('voltar') || '/';
+  const params = useSearchParams();
+  const back = params.get('voltar') || '/';
+  const linkError = params.get('erro') === 'link';
+
+  const resend = async (to: string) => {
+    const { error } = await createClient().auth.resend({ type: 'signup', email: to, options: { emailRedirectTo: `${window.location.origin}/` } });
+    setError(error ? 'Espere um minuto antes de pedir outro e-mail.' : 'Enviamos o e-mail de confirmação de novo.');
+  };
 
   const submit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -21,12 +30,13 @@ function Form() {
     const res =
       mode === 'entrar'
         ? await supabase.auth.signInWithPassword({ email, password })
-        : await supabase.auth.signUp({ email, password, options: { data: { display_name: name } } });
+        : await supabase.auth.signUp({ email, password, options: { data: { display_name: name }, emailRedirectTo: `${window.location.origin}/` } });
     setBusy(false);
     if (res.error) {
       const msg = res.error.message.toLowerCase();
       setError(
-        msg.includes('invalid login') ? 'E-mail ou senha não conferem.'
+        msg.includes('not confirmed') ? 'Confirme seu e-mail antes de entrar. Procure o e-mail do Musika na caixa de entrada e no spam.'
+        : msg.includes('invalid login') ? 'E-mail ou senha não conferem.'
         : msg.includes('already registered') ? 'Esse e-mail já tem conta. Entre com a senha.'
         : msg.includes('password') ? 'A senha precisa ter pelo menos 6 caracteres.'
         : res.error.message,
@@ -34,16 +44,28 @@ function Form() {
       return;
     }
     if (mode === 'criar' && !res.data.session) {
-      setError('Conta criada. Confirme pelo link enviado no seu e-mail e depois entre.');
-      setMode('entrar');
+      setWaiting(email);
       return;
     }
     router.replace(back.startsWith('/') ? back : '/');
     router.refresh();
   };
 
+  if (waiting) {
+    return (
+      <div className="mx-auto max-w-md py-10">
+        <h1 className="font-display text-5xl font-extrabold leading-[0.95] tracking-tight">Confirme seu e-mail.</h1>
+        <p className="mt-5 text-lg">Enviamos um link para <strong>{waiting}</strong>. Abra e toque em Confirmar meu e-mail para ativar a conta.</p>
+        <p className="mt-3 text-nevoa">Não chegou? Olhe o spam e a aba Promoções.</p>
+        {error && <p className="mt-4 rounded-lg bg-lona px-3 py-2 text-sm" role="status">{error}</p>}
+        <button onClick={() => resend(waiting)} className="mt-8 h-12 rounded-full border border-luar/40 px-6 font-semibold">Reenviar e-mail</button>
+      </div>
+    );
+  }
+
   return (
     <div className="mx-auto max-w-md py-10">
+      {linkError && <p className="mb-6 rounded-lg bg-chita/15 px-4 py-3 text-sm">Esse link já foi usado ou venceu. Entre com sua senha ou peça um link novo.</p>}
       <h1 className="font-display text-5xl font-extrabold leading-[0.95] tracking-tight">
         {mode === 'entrar' ? 'Bem-vindo de volta.' : 'Crie sua conta e comece a pontuar.'}
       </h1>
@@ -66,11 +88,15 @@ function Form() {
           <input required type="password" minLength={6} value={password} onChange={(e) => setPassword(e.target.value)} className="field" autoComplete={mode === 'entrar' ? 'current-password' : 'new-password'} />
         </label>
         {error && <p className="rounded-lg bg-chita/15 px-3 py-2 text-sm text-luar" role="alert">{error}</p>}
+        {error?.startsWith('Confirme seu e-mail') && (
+          <button type="button" onClick={() => resend(email)} className="text-sm font-semibold text-sol">Reenviar e-mail de confirmação</button>
+        )}
         <button disabled={busy} className="h-12 w-full rounded-full bg-sol font-semibold text-noite disabled:opacity-60">
           {busy ? 'Aguarde…' : mode === 'entrar' ? 'Entrar' : 'Criar conta'}
         </button>
       </form>
-      <button onClick={() => { setMode(mode === 'entrar' ? 'criar' : 'entrar'); setError(null); }} className="mt-6 text-sm font-semibold text-nevoa hover:text-luar">
+      {mode === 'entrar' && <Link href="/esqueci-senha" className="mt-6 block text-sm font-semibold text-nevoa hover:text-luar">Esqueci minha senha</Link>}
+      <button onClick={() => { setMode(mode === 'entrar' ? 'criar' : 'entrar'); setError(null); }} className="mt-3 text-sm font-semibold text-nevoa hover:text-luar">
         {mode === 'entrar' ? 'Ainda não tem conta? Criar conta' : 'Já tem conta? Entrar'}
       </button>
     </div>

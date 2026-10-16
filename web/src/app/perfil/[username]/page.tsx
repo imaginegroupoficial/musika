@@ -41,6 +41,7 @@ export default async function PerfilPage({ params }: { params: { username: strin
           {lv.next ? `Faltam ${lv.next - p.xp} pontos para o próximo nível.` : 'Nível máximo. Respeito.'}
           {p.streak > 0 ? ` Sequência atual: ${p.streak} ${p.streak === 1 ? 'dia' : 'dias'}.` : ''}
         </p>
+        {isMe && <Link href="/conta" className="mt-4 inline-block text-sm font-semibold text-sol">Editar minha conta</Link>}
         {isMe && (
           <p className="mt-4 text-sm">
             Compartilhe qualquer CD pelo botão Compartilhar: cada amigo que ouvir pelo seu link vale 5 pontos.

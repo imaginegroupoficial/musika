@@ -57,7 +57,7 @@ export default async function Biblioteca() {
     <>
       <h1 className="font-display text-5xl font-extrabold tracking-tight md:text-6xl">Sua biblioteca</h1>
       <nav className="mt-5 flex flex-wrap gap-2 md:hidden">
-        {[['/playlists', 'Playlists'], ['/retrospectiva', 'Retrospectiva'], ['/premium', 'Premium'], ['/anunciar', 'Anunciar'], ['/studio', 'Sou artista']].map(([h, l]) => (
+        {[['/conta', 'Minha conta'], ['/playlists', 'Playlists'], ['/retrospectiva', 'Retrospectiva'], ['/premium', 'Premium'], ['/anunciar', 'Anunciar'], ['/studio', 'Sou artista']].map(([h, l]) => (
           <Link key={h} href={h} className="rounded-full bg-lona px-4 py-2 text-sm font-semibold">{l}</Link>
         ))}
       </nav>
@@ -85,7 +85,8 @@ export default async function Biblioteca() {
         )}
       </section>
 
-      <form action="/sair" method="post" className="mt-14">
+      <p className="mt-14"><Link href="/conta" className="text-sm font-semibold text-nevoa hover:text-luar">Minha conta: e-mail, senha e perfil</Link></p>
+      <form action="/sair" method="post" className="mt-4">
         <button className="text-sm font-semibold text-nevoa hover:text-luar">Sair da conta</button>
       </form>
     </>

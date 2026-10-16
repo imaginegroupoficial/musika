@@ -16,6 +16,14 @@ ADMIN_EMAIL="${ADMIN_EMAIL:-$ACME_EMAIL}"
 PAGARME_SECRET_KEY="${PAGARME_SECRET_KEY:-$(prev PAGARME_SECRET_KEY)}"
 PAGARME_WEBHOOK_TOKEN="${PAGARME_WEBHOOK_TOKEN:-$(prev PAGARME_WEBHOOK_TOKEN)}"
 PAGARME_WEBHOOK_TOKEN="${PAGARME_WEBHOOK_TOKEN:-$(openssl rand -hex 20)}"
+# e-mail (SMTP) para confirmação de conta e troca de senha
+SMTP_HOST="${SMTP_HOST:-$(prev SMTP_HOST)}"
+SMTP_PORT="${SMTP_PORT:-$(prev SMTP_PORT)}"
+SMTP_PORT="${SMTP_PORT:-465}"
+SMTP_USER="${SMTP_USER:-$(prev SMTP_USER)}"
+SMTP_PASS="${SMTP_PASS:-$(prev SMTP_PASS)}"
+SMTP_FROM="${SMTP_FROM:-$(prev SMTP_FROM)}"
+SMTP_FROM="${SMTP_FROM:-nao-responda@${DOMAIN}}"
 APP_DIR="$(cd "$(dirname "$0")/.." && pwd)"
 SB_DIR="/opt/musika-supabase"
 SB_SRC="/opt/supabase-src"
@@ -81,6 +89,19 @@ if [ ! -f .env ]; then
   set_env .env STUDIO_DEFAULT_PROJECT Musika
 fi
 
+# e-mails: com SMTP configurado, a conta só ativa depois de confirmar o e-mail
+if [ -n "$SMTP_HOST" ]; then
+  set_env .env SMTP_HOST "$SMTP_HOST"
+  set_env .env SMTP_PORT "$SMTP_PORT"
+  set_env .env SMTP_USER "$SMTP_USER"
+  set_env .env SMTP_PASS "$SMTP_PASS"
+  set_env .env SMTP_ADMIN_EMAIL "$SMTP_FROM"
+  set_env .env SMTP_SENDER_NAME "Musika"
+  set_env .env ENABLE_EMAIL_AUTOCONFIRM false
+else
+  set_env .env ENABLE_EMAIL_AUTOCONFIRM true
+fi
+
 # o nome do gateway mudou entre versões do Supabase (kong -> api-gw)
 if grep -q '^  api-gw:' docker-compose.yml; then GW=api-gw; else GW=kong; fi
 cat > docker-compose.musika.yml <<EOF
@@ -100,6 +121,20 @@ services:
   storage:
     environment:
       FILE_SIZE_LIMIT: 524288000
+  auth:
+    environment:
+      GOTRUE_MAILER_TEMPLATES_CONFIRMATION: https://${DOMAIN}/email/confirmacao.html
+      GOTRUE_MAILER_TEMPLATES_RECOVERY: https://${DOMAIN}/email/recuperacao.html
+      GOTRUE_MAILER_TEMPLATES_EMAIL_CHANGE: https://${DOMAIN}/email/troca-email.html
+      GOTRUE_MAILER_TEMPLATES_MAGIC_LINK: https://${DOMAIN}/email/link-magico.html
+      GOTRUE_MAILER_TEMPLATES_INVITE: https://${DOMAIN}/email/convite.html
+      GOTRUE_MAILER_SUBJECTS_CONFIRMATION: "Confirme seu e-mail no Musika"
+      GOTRUE_MAILER_SUBJECTS_RECOVERY: "Crie uma senha nova no Musika"
+      GOTRUE_MAILER_SUBJECTS_EMAIL_CHANGE: "Confirme seu novo e-mail no Musika"
+      GOTRUE_MAILER_SUBJECTS_MAGIC_LINK: "Seu link de acesso ao Musika"
+      GOTRUE_MAILER_SUBJECTS_INVITE: "Você foi convidado para o Musika"
+      GOTRUE_MAILER_SECURE_EMAIL_CHANGE_ENABLED: "false"
+      GOTRUE_RATE_LIMIT_EMAIL_SENT: "200"
   supavisor:
     # pooler do Postgres só acessível de dentro da VPS
     ports: !override
@@ -154,6 +189,11 @@ ANON_KEY=${ANON_KEY}
 SERVICE_ROLE_KEY=${SERVICE_ROLE_KEY}
 PAGARME_SECRET_KEY=${PAGARME_SECRET_KEY}
 PAGARME_WEBHOOK_TOKEN=${PAGARME_WEBHOOK_TOKEN}
+SMTP_HOST=${SMTP_HOST}
+SMTP_PORT=${SMTP_PORT}
+SMTP_USER=${SMTP_USER}
+SMTP_PASS=${SMTP_PASS}
+SMTP_FROM=${SMTP_FROM}
 EOF
 chmod 600 .env "$SB_DIR/.env"
 docker compose -p musika up -d --build
@@ -179,6 +219,8 @@ cat <<EOF
    senha:   $(get_env "$SB_DIR/.env" DASHBOARD_PASSWORD)
 
  Administrador: ${ADMIN_EMAIL} (crie a conta no site com esse e-mail)
+
+ E-mails: $( [ -n "$SMTP_HOST" ] && echo "SMTP ${SMTP_HOST} (contas novas confirmam o e-mail)" || echo "SEM SMTP. Contas entram sem confirmar e não há recuperação de senha" )
 
  Pagar.me: $( [ -n "$PAGARME_SECRET_KEY" ] && echo "chave configurada" || echo "SEM CHAVE. Rode de novo com PAGARME_SECRET_KEY=sk_... para ativar pagamentos" )
  Webhook para cadastrar no painel do Pagar.me (eventos order.paid e charge.paid):
