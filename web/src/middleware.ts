@@ -1,6 +1,6 @@
 import { createServerClient, type CookieOptions } from '@supabase/ssr';
 import { NextResponse, type NextRequest } from 'next/server';
-import { AUTH_COOKIE, SUPABASE_ANON_KEY, serverSupabaseUrl } from '@/lib/env';
+import { AUTH_COOKIE, SITE_URL, SUPABASE_ANON_KEY, serverSupabaseUrl } from '@/lib/env';
 
 export async function middleware(request: NextRequest) {
   let response = NextResponse.next({ request });
@@ -22,8 +22,8 @@ export async function middleware(request: NextRequest) {
   } = await supabase.auth.getUser();
 
   if (!user && request.nextUrl.pathname.startsWith('/studio')) {
-    const url = request.nextUrl.clone();
-    url.pathname = '/entrar';
+    // endereço público: atrás do Traefik o servidor se vê como 0.0.0.0:3000
+    const url = new URL('/entrar', SITE_URL);
     url.searchParams.set('voltar', request.nextUrl.pathname);
     return NextResponse.redirect(url);
   }

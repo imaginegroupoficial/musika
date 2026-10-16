@@ -1,3 +1,4 @@
+import { SITE_URL } from '@/lib/env';
 import { NextResponse } from 'next/server';
 import { createAdminClient, createClient } from '@/lib/supabase/server';
 
@@ -11,7 +12,7 @@ export async function GET(request: Request, { params }: { params: { id: string }
     .maybeSingle();
   const rel = (track as unknown as { releases?: { download_allowed: boolean; status: string; publish_at: string } })?.releases;
   if (!track || !rel || !rel.download_allowed || rel.status !== 'ready' || new Date(rel.publish_at) > new Date()) {
-    return NextResponse.redirect(new URL('/', request.url));
+    return NextResponse.redirect(new URL('/', SITE_URL));
   }
   const admin = createAdminClient();
   const ext = (track.upload_path || '').split('.').pop() || 'mp3';
