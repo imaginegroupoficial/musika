@@ -4,7 +4,7 @@ import { useRouter } from 'next/navigation';
 import { createClient } from '@/lib/supabase/client';
 import { slugify } from '@/lib/media';
 
-const genres = ['Forró', 'Piseiro', 'Arrocha', 'Sertanejo', 'Brega', 'Pagode', 'Axé', 'Funk', 'Seresta', 'Vaquejada', 'Gospel', 'Outro'];
+import { GENRES as genres } from '@/lib/labels';
 
 export default function NovoArtista() {
   const router = useRouter();

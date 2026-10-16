@@ -36,6 +36,8 @@ services:
     environment:
       SUPABASE_INTERNAL_URL: http://supabase-gw:8000
       SUPABASE_SERVICE_ROLE_KEY: ${SERVICE_ROLE_KEY}
+      PAGARME_SECRET_KEY: ${PAGARME_SECRET_KEY:-}
+      PAGARME_WEBHOOK_TOKEN: ${PAGARME_WEBHOOK_TOKEN:-}
     deploy:
       resources:
         limits: { memory: 2g }

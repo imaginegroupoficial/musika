@@ -2,6 +2,8 @@ import Link from 'next/link';
 import { redirect } from 'next/navigation';
 import { getSessionProfile } from '@/lib/supabase/server';
 import TrackList from '@/components/TrackList';
+import { ReleaseRow } from '@/components/ReleaseCard';
+import { mapRelease, releaseSelect } from '@/lib/queries';
 import type { TrackRow } from '@/lib/tracks';
 
 export const metadata = { title: 'Biblioteca' };
@@ -44,11 +46,22 @@ export default async function Biblioteca() {
       artist_slug: l.tracks!.artists.slug,
       artist_name: l.tracks!.artists.name,
     }));
+  const followedIds = ((follows.data as unknown as { artists: { id: string } }[]) || []).map((f) => f.artists?.id).filter(Boolean);
+  const { data: fresh } = followedIds.length
+    ? await supabase.from('releases').select(releaseSelect).in('artist_id', followedIds).eq('status', 'ready').lte('publish_at', new Date().toISOString()).gte('publish_at', new Date(Date.now() - 30 * 864e5).toISOString()).order('publish_at', { ascending: false }).limit(12)
+    : { data: [] };
+  const novidades = ((fresh as never[]) || []).map(mapRelease);
   const artists = ((follows.data as unknown as { artists: { id: string; slug: string; name: string; genre: string | null } }[]) || []).map((f) => f.artists).filter(Boolean);
 
   return (
     <>
       <h1 className="font-display text-5xl font-extrabold tracking-tight md:text-6xl">Sua biblioteca</h1>
+      <nav className="mt-5 flex flex-wrap gap-2 md:hidden">
+        {[['/playlists', 'Playlists'], ['/retrospectiva', 'Retrospectiva'], ['/premium', 'Premium'], ['/anunciar', 'Anunciar'], ['/studio', 'Sou artista']].map(([h, l]) => (
+          <Link key={h} href={h} className="rounded-full bg-lona px-4 py-2 text-sm font-semibold">{l}</Link>
+        ))}
+      </nav>
+      <ReleaseRow title="Novidades de quem você segue" items={novidades} />
 
       <section className="mt-10">
         <h2 className="mb-4 font-display text-2xl font-bold">Artistas que você segue</h2>

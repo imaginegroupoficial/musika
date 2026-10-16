@@ -6,7 +6,16 @@
 set -euo pipefail
 
 DOMAIN="${DOMAIN:-musika.tech}"
+APP_ENV_FILE="$(cd "$(dirname "$0")/.." && pwd)/.env"
+# valores já salvos numa instalação anterior continuam valendo se não forem passados de novo
+prev() { [ -f "$APP_ENV_FILE" ] && grep "^$1=" "$APP_ENV_FILE" | head -1 | cut -d= -f2- || true; }
+ACME_EMAIL="${ACME_EMAIL:-$(prev ACME_EMAIL)}"
 ACME_EMAIL="${ACME_EMAIL:-admin@${DOMAIN}}"
+ADMIN_EMAIL="${ADMIN_EMAIL:-$(prev ADMIN_EMAIL)}"
+ADMIN_EMAIL="${ADMIN_EMAIL:-$ACME_EMAIL}"
+PAGARME_SECRET_KEY="${PAGARME_SECRET_KEY:-$(prev PAGARME_SECRET_KEY)}"
+PAGARME_WEBHOOK_TOKEN="${PAGARME_WEBHOOK_TOKEN:-$(prev PAGARME_WEBHOOK_TOKEN)}"
+PAGARME_WEBHOOK_TOKEN="${PAGARME_WEBHOOK_TOKEN:-$(openssl rand -hex 20)}"
 APP_DIR="$(cd "$(dirname "$0")/.." && pwd)"
 SB_DIR="/opt/musika-supabase"
 SB_SRC="/opt/supabase-src"
@@ -126,6 +135,10 @@ for f in "$APP_DIR"/supabase/migrations/*.sql; do
   psql_db < "$f"
   psql_db -c "insert into public._musika_migrations (name) values ('${name}')" >/dev/null
 done
+# e-mails de administrador: contas novas entram como admin e as existentes são promovidas
+ADMIN_JSON="$(printf '%s' "$ADMIN_EMAIL" | tr 'A-Z' 'a-z' | tr ',; ' '\n\n\n' | sed '/^$/d' | jq -R . | jq -sc .)"
+psql_db -c "update public.settings set value = (select jsonb_agg(distinct e) from jsonb_array_elements_text(value || '${ADMIN_JSON}'::jsonb) e) where key = 'admin_emails';" >/dev/null
+psql_db -c "update public.profiles p set is_admin = true from auth.users u where u.id = p.id and lower(u.email) in (select jsonb_array_elements_text(value) from public.settings where key = 'admin_emails');" >/dev/null
 # avisa o PostgREST para recarregar o schema
 psql_db -c "notify pgrst, 'reload schema';" >/dev/null
 
@@ -136,8 +149,11 @@ SERVICE_ROLE_KEY="$(get_env "$SB_DIR/.env" SERVICE_ROLE_KEY)"
 cat > .env <<EOF
 DOMAIN=${DOMAIN}
 ACME_EMAIL=${ACME_EMAIL}
+ADMIN_EMAIL=${ADMIN_EMAIL}
 ANON_KEY=${ANON_KEY}
 SERVICE_ROLE_KEY=${SERVICE_ROLE_KEY}
+PAGARME_SECRET_KEY=${PAGARME_SECRET_KEY}
+PAGARME_WEBHOOK_TOKEN=${PAGARME_WEBHOOK_TOKEN}
 EOF
 chmod 600 .env "$SB_DIR/.env"
 docker compose -p musika up -d --build
@@ -162,7 +178,13 @@ cat <<EOF
    usuário: $(get_env "$SB_DIR/.env" DASHBOARD_USERNAME)
    senha:   $(get_env "$SB_DIR/.env" DASHBOARD_PASSWORD)
 
- Segredos: ${SB_DIR}/.env (guarde uma cópia fora da VPS)
+ Administrador: ${ADMIN_EMAIL} (crie a conta no site com esse e-mail)
+
+ Pagar.me: $( [ -n "$PAGARME_SECRET_KEY" ] && echo "chave configurada" || echo "SEM CHAVE. Rode de novo com PAGARME_SECRET_KEY=sk_... para ativar pagamentos" )
+ Webhook para cadastrar no painel do Pagar.me (eventos order.paid e charge.paid):
+   https://${DOMAIN}/api/pagarme/webhook?token=${PAGARME_WEBHOOK_TOKEN}
+
+ Segredos: ${SB_DIR}/.env e ${APP_DIR}/.env (guarde cópias fora da VPS)
  Backups:  /opt/musika-backups (copie para fora da VPS também)
 ==============================================================
 EOF

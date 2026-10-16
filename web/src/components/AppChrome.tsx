@@ -2,7 +2,7 @@
 import Link from 'next/link';
 import { usePathname, useSearchParams } from 'next/navigation';
 import { useEffect } from 'react';
-import { FireIcon, HomeIcon, LibraryIcon, MicIcon, SearchIcon, TrophyIcon } from './Icons';
+import { FireIcon, HomeIcon, LibraryIcon, MicIcon, QueueIcon, SearchIcon, TrophyIcon } from './Icons';
 
 const items = [
   { href: '/', label: 'Início', Icon: HomeIcon },
@@ -16,8 +16,15 @@ function active(path: string, href: string) {
   return href === '/' ? path === '/' : path.startsWith(href);
 }
 
-export function SideNav({ userSlot }: { userSlot: React.ReactNode }) {
+const extra = [
+  { href: '/playlists', label: 'Playlists', Icon: QueueIcon },
+];
+
+export function SideNav({ userSlot, isAdmin, isPremium }: { userSlot: React.ReactNode; isAdmin?: boolean; isPremium?: boolean }) {
   const path = usePathname();
+  const sub = (href: string, label: string) => (
+    <Link key={href} href={href} className={`block rounded-lg px-3 py-1.5 text-sm ${path.startsWith(href) ? 'text-luar' : 'text-nevoa hover:text-luar'}`}>{label}</Link>
+  );
   return (
     <aside className="sticky top-0 hidden h-screen w-60 shrink-0 flex-col border-r border-lona px-4 pb-24 pt-6 md:flex">
       <Link href="/" className="mb-8 px-3 font-display text-[28px] font-extrabold leading-none tracking-tight text-sol">
@@ -33,6 +40,11 @@ export function SideNav({ userSlot }: { userSlot: React.ReactNode }) {
             <Icon className="h-5 w-5" /> {label}
           </Link>
         ))}
+        {extra.map(({ href, label, Icon }) => (
+          <Link key={href} href={href} className={`flex items-center gap-3 rounded-xl px-3 py-2.5 font-medium ${active(path, href) ? 'bg-lona text-luar' : 'text-nevoa hover:text-luar'}`}>
+            <Icon className="h-5 w-5" /> {label}
+          </Link>
+        ))}
       </nav>
       <Link
         href="/studio"
@@ -40,6 +52,12 @@ export function SideNav({ userSlot }: { userSlot: React.ReactNode }) {
       >
         <MicIcon className="h-5 w-5" /> Sou artista
       </Link>
+      <div className="mt-4 space-y-0.5">
+        {!isPremium && sub('/premium', 'Musika Premium')}
+        {sub('/anunciar', 'Anunciar no Musika')}
+        {sub('/retrospectiva', 'Sua retrospectiva')}
+        {isAdmin && sub('/admin', 'Administração')}
+      </div>
       <div className="mt-auto">{userSlot}</div>
     </aside>
   );

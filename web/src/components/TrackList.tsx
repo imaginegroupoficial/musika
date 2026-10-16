@@ -5,6 +5,9 @@ import { formatCount, formatDuration } from '@/lib/media';
 import { toPlayerTrack, type TrackRow } from '@/lib/tracks';
 import { DownloadIcon, PauseIcon, PlayIcon } from './Icons';
 import LikeButton from './LikeButton';
+import AddToPlaylist from './AddToPlaylist';
+import { createClient } from '@/lib/supabase/client';
+import { useRouter } from 'next/navigation';
 
 type Props = {
   tracks: TrackRow[];
@@ -13,10 +16,16 @@ type Props = {
   showArtist?: boolean;
   downloads?: boolean;
   source?: string;
+  removeFromPlaylist?: string;
 };
 
-export default function TrackList({ tracks, liked = [], loggedIn = false, showArtist = false, downloads = false, source }: Props) {
+export default function TrackList({ tracks, liked = [], loggedIn = false, showArtist = false, downloads = false, source, removeFromPlaylist }: Props) {
   const { queue, index, playing, playQueue, toggle } = usePlayer();
+  const router = useRouter();
+  const remove = async (trackId: string) => {
+    await createClient().from('playlist_tracks').delete().eq('playlist_id', removeFromPlaylist!).eq('track_id', trackId);
+    router.refresh();
+  };
   const currentId = queue[index]?.id;
   const playable = tracks.filter((t) => t.hls_path);
 
@@ -61,6 +70,10 @@ export default function TrackList({ tracks, liked = [], loggedIn = false, showAr
             </div>
             {t.plays != null && t.plays > 0 && <span className="hidden text-sm tabular-nums text-nevoa sm:block">{formatCount(t.plays)}</span>}
             <LikeButton trackId={t.id} initial={liked.includes(t.id)} loggedIn={loggedIn} />
+            {loggedIn && <AddToPlaylist trackId={t.id} />}
+            {removeFromPlaylist && (
+              <button onClick={() => remove(t.id)} aria-label={`Tirar ${t.title} da playlist`} className="ctl">×</button>
+            )}
             {downloads && (
               <a href={`/api/download/${t.id}`} aria-label={`Baixar ${t.title}`} className="ctl">
                 <DownloadIcon className="h-[18px] w-[18px]" />

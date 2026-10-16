@@ -13,6 +13,7 @@ export type TrackRow = {
   artist_slug: string;
   artist_name: string;
   plays?: number;
+  genre?: string | null;
 };
 
 export function toPlayerTrack(t: TrackRow): PlayerTrack {
@@ -26,5 +27,6 @@ export function toPlayerTrack(t: TrackRow): PlayerTrack {
     releaseTitle: t.release_title,
     releaseSlug: t.release_slug,
     cover: coverUrl(t.cover_path),
+    genre: t.genre ?? null,
   };
 }

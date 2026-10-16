@@ -41,3 +41,7 @@ export function levelInfo(xp: number) {
   if (xp >= 50) return { level: 2, name: 'Fã', floor: 50, next: 200 };
   return { level: 1, name: 'Ouvinte', floor: 0, next: 50 };
 }
+
+export const adMediaUrl = (path?: string | null) => (path ? `${SUPABASE_URL}/storage/v1/object/public/ads/${path}` : null);
+
+export const brl = (cents: number) => (Number(cents || 0) / 100).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });

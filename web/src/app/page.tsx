@@ -6,21 +6,29 @@ import TrackList, { PlayAllButton } from '@/components/TrackList';
 import { formatCount } from '@/lib/media';
 import type { ReleaseCardData } from '@/lib/types';
 import type { TrackRow } from '@/lib/tracks';
+import AdBanner from '@/components/AdBanner';
 
 export const revalidate = 0;
 
 export default async function Home() {
   const { supabase, user } = await getSessionProfile();
-  const [trending, topWeek, latest, topTracks, artists] = await Promise.all([
+  const [trending, topWeek, latest, topTracks, artists, heroBoost, rowBoost] = await Promise.all([
     supabase.rpc('trending_releases', { p_limit: 12 }),
     supabase.rpc('top_releases', { p_days: 7, p_limit: 12, p_genre: null }),
     latestReleases(supabase, 12),
     supabase.rpc('top_tracks', { p_days: 7, p_limit: 10 }),
     supabase.from('artists').select('id, slug, name, genre, city, uf, verified').order('created_at', { ascending: false }).limit(8),
+    supabase.rpc('active_boosts', { p_placement: 'home_hero' }),
+    supabase.rpc('active_boosts', { p_placement: 'home_row' }),
   ]);
+  type Boosted = ReleaseCardData & { boost_id: string };
+  const heroB = ((heroBoost.data || []) as Boosted[])[0];
+  const rowB = (rowBoost.data || []) as Boosted[];
+  const shownBoosts = [heroB?.boost_id, ...rowB.map((b) => b.boost_id)].filter(Boolean);
+  if (shownBoosts.length) await supabase.rpc('boost_impression', { p_ids: shownBoosts });
 
   const trendingItems = (trending.data || []) as ReleaseCardData[];
-  const hero = trendingItems[0] || (latest[0] as ReleaseCardData | undefined);
+  const hero = heroB || trendingItems[0] || (latest[0] as ReleaseCardData | undefined);
 
   if (!hero) {
     return (
@@ -44,11 +52,11 @@ export default async function Home() {
   return (
     <>
       <section className="grid items-end gap-6 md:grid-cols-[minmax(0,320px)_1fr] md:gap-10">
-        <Link href={`/${hero.artist_slug}/${hero.slug}`} className="block w-56 md:w-auto md:max-w-[320px]">
+        <Link href={heroB ? `/${hero.artist_slug}/${hero.slug}?b=${heroB.boost_id}&utm_source=patrocinado` : `/${hero.artist_slug}/${hero.slug}`} className="block w-56 md:w-auto md:max-w-[320px]">
           <Cover path={hero.cover_path} title={hero.title} />
         </Link>
         <div className="min-w-0">
-          <p className="text-sm font-semibold text-chita">Estourando agora</p>
+          <p className="text-sm font-semibold text-chita">{heroB ? 'Patrocinado' : 'Estourando agora'}</p>
           <h1 className="mt-2 font-display text-[clamp(2.75rem,8vw,6.5rem)] font-extrabold leading-[0.9] tracking-tight">
             <Link href={`/${hero.artist_slug}`} className="hover:text-sol">{hero.artist_name}</Link>
           </h1>
@@ -65,7 +73,9 @@ export default async function Home() {
         </div>
       </section>
 
-      <ReleaseRow title="Estourados" items={trendingItems.slice(1)} />
+      <ReleaseRow title="Estourados" items={heroB ? trendingItems : trendingItems.slice(1)} />
+      <ReleaseRow title="Patrocinados" items={rowB} />
+      <AdBanner context="home" />
       <ReleaseRow title="Mais ouvidos da semana" href="/top" items={(topWeek.data || []).filter((r: ReleaseCardData) => (r.plays || 0) > 0)} ranked />
       <ReleaseRow title="Acabou de sair" items={latest} />
 

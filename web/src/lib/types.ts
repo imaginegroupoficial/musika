@@ -8,6 +8,7 @@ export type PlayerTrack = {
   releaseTitle: string;
   releaseSlug: string;
   cover: string | null;
+  genre?: string | null;
 };
 
 export type ReleaseCardData = {

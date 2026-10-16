@@ -12,6 +12,8 @@ type PlayerState = {
   repeat: 'off' | 'all' | 'one';
   source: string | null;
   toasts: Toast[];
+  ctl: { time: () => number; seek: (t: number) => void } | null;
+  setCtl: (c: PlayerState['ctl']) => void;
   current: () => PlayerTrack | null;
   playQueue: (tracks: PlayerTrack[], start?: number, source?: string | null) => void;
   addNext: (track: PlayerTrack) => void;
@@ -35,6 +37,8 @@ export const usePlayer = create<PlayerState>((set, get) => ({
   repeat: 'off',
   source: null,
   toasts: [],
+  ctl: null,
+  setCtl: (c) => set({ ctl: c }),
   current: () => get().queue[get().index] ?? null,
   playQueue: (tracks, start = 0, source = null) => set({ queue: tracks, index: start, playing: true, source }),
   addNext: (track) =>

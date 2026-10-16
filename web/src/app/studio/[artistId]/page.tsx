@@ -29,20 +29,20 @@ function DailyChart({ daily }: { daily: Dash['daily'] }) {
   const max = Math.max(1, ...daily.map((d) => d.plays));
   const w = 720, h = 160, bw = w / Math.max(1, daily.length);
   return (
-    <svg viewBox={`0 0 ${w} ${h + 22}`} className="w-full" role="img" aria-label="Plays por dia nos últimos 30 dias">
+    <svg viewBox={`0 -20 ${w} ${h + 42}`} className="w-full" role="img" aria-label="Plays por dia nos últimos 30 dias">
       {daily.map((d, i) => {
         const bh = (d.plays / max) * h;
         return (
           <g key={d.day}>
             <rect x={i * bw + 2} y={h - bh} width={Math.max(2, bw - 4)} height={Math.max(bh, 1)} rx={3} fill={i === daily.length - 1 ? '#FFC531' : '#E8336D'} opacity={i === daily.length - 1 ? 1 : 0.85}>
-              <title>{`${new Date(d.day + 'T12:00:00').toLocaleDateString('pt-BR')}: ${d.plays} plays`}</title>
+              <title>{`${new Date(String(d.day).slice(0, 10) + 'T12:00:00').toLocaleDateString('pt-BR')}: ${d.plays} plays`}</title>
             </rect>
           </g>
         );
       })}
-      <text x={0} y={h + 18} fill="#B9AEE0" fontSize="12">{daily[0] && new Date(daily[0].day + 'T12:00:00').toLocaleDateString('pt-BR', { day: '2-digit', month: 'short' })}</text>
+      <text x={0} y={h + 18} fill="#B9AEE0" fontSize="12">{daily[0] && new Date(String(daily[0].day).slice(0, 10) + 'T12:00:00').toLocaleDateString('pt-BR', { day: '2-digit', month: 'short' })}</text>
       <text x={w} y={h + 18} fill="#B9AEE0" fontSize="12" textAnchor="end">hoje</text>
-      <text x={w} y={12} fill="#B9AEE0" fontSize="12" textAnchor="end">{max} plays</text>
+      <text x={0} y={12} fill="#B9AEE0" fontSize="12">pico de {max} plays</text>
     </svg>
   );
 }
@@ -168,7 +168,7 @@ export default async function ArtistDashboard({ params }: { params: { artistId: 
                 <li key={r.id} className="flex items-center gap-4 py-3">
                   <div className="w-14 shrink-0"><Cover path={r.cover_path} title={r.title} className="!rounded-lg" /></div>
                   <div className="min-w-0 flex-1">
-                    <Link href={`/${artist.slug}/${r.slug}`} className="block truncate font-semibold hover:text-sol">{r.title}</Link>
+                    <Link href={`/studio/${artist.id}/lancamento/${r.id}`} className="block truncate font-semibold hover:text-sol">{r.title}</Link>
                     <span className="text-sm text-nevoa">
                       {kindLabel[r.kind]}, {ready} de {r.tracks.length} faixas prontas{failed ? `, ${failed} com erro` : ''}
                     </span>

@@ -15,6 +15,9 @@ export default async function SearchPage({ searchParams }: { searchParams: { q?:
   const artists = (res?.artists || []) as { id: string; slug: string; name: string; genre: string | null; verified: boolean }[];
   const releases = (res?.releases || []) as ReleaseCardData[];
   const tracks = (res?.tracks || []) as TrackRow[];
+  const { data: boosted } = q.length >= 2 ? await supabase.rpc('active_boosts', { p_placement: 'search' }) : { data: [] };
+  const sponsored = ((boosted || []) as (ReleaseCardData & { boost_id: string })[]).slice(0, 2);
+  if (sponsored.length) await supabase.rpc('boost_impression', { p_ids: sponsored.map((b) => b.boost_id) });
 
   return (
     <>
@@ -35,6 +38,14 @@ export default async function SearchPage({ searchParams }: { searchParams: { q?:
         <p className="mt-8 text-nevoa">Nada encontrado para “{q}”. Tente só o nome do artista.</p>
       )}
 
+      {sponsored.length > 0 && (
+        <section className="mt-8">
+          <p className="mb-3 text-xs text-nevoa">Patrocinado</p>
+          <div className="grid grid-cols-2 gap-5 sm:grid-cols-4 lg:grid-cols-6">
+            {sponsored.map((r) => <ReleaseCard key={r.boost_id} r={r} />)}
+          </div>
+        </section>
+      )}
       {artists.length > 0 && (
         <section className="mt-10">
           <h2 className="mb-4 font-display text-2xl font-bold">Artistas</h2>

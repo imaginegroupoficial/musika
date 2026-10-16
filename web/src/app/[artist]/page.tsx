@@ -7,6 +7,8 @@ import ReleaseCard from '@/components/ReleaseCard';
 import FollowButton from '@/components/FollowButton';
 import { CheckBadge } from '@/components/Icons';
 import { coverUrl, formatCount, levelInfo } from '@/lib/media';
+import { ArtistSections, FanClubCard } from '@/components/ArtistExtras';
+import AdBanner from '@/components/AdBanner';
 
 type Props = { params: { artist: string } };
 
@@ -21,7 +23,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 }
 
 export default async function ArtistPage({ params }: Props) {
-  const { supabase, user } = await getSessionProfile();
+  const { supabase, user, profile } = await getSessionProfile();
   const { data: artist } = await supabase.from('artists').select('*').eq('slug', params.artist).maybeSingle();
   if (!artist) notFound();
 
@@ -37,6 +39,8 @@ export default async function ArtistPage({ params }: Props) {
   const avatar = coverUrl(artist.avatar_path);
   const topFans = (fans.data || []) as { user_id: string; username: string; display_name: string | null; xp: number }[];
   const myRank = user ? topFans.findIndex((f) => f.user_id === user.id) : -1;
+  const { data: team } = user ? await supabase.from('artist_members').select('role').eq('artist_id', artist.id).eq('user_id', user.id).maybeSingle() : { data: null };
+  const isTeam = !!team;
 
   return (
     <>
@@ -90,9 +94,12 @@ export default async function ArtistPage({ params }: Props) {
           ) : (
             <p className="text-nevoa">Nenhum lançamento publicado ainda.</p>
           )}
+          <ArtistSections artistId={artist.id} artistName={artist.name} userId={user?.id ?? null} isMember={isTeam} />
+          <AdBanner context={`artista:${artist.slug}`} genre={artist.genre} />
         </section>
 
-        <aside className="self-start rounded-capa bg-lona p-5">
+        <div className="self-start">
+        <aside className="rounded-capa bg-lona p-5">
           <h2 className="font-display text-xl font-bold">Top fãs</h2>
           <p className="mt-1 text-sm text-nevoa">Quem mais ouve e divulga {artist.name}. Ouça até o fim e compartilhe para subir.</p>
           {topFans.length ? (
@@ -115,6 +122,9 @@ export default async function ArtistPage({ params }: Props) {
           )}
           {user && myRank === -1 && topFans.length >= 10 && <p className="mt-4 text-sm text-sol">Você ainda não está no top 10.</p>}
         </aside>
+        <FanClubCard artistId={artist.id} artistName={artist.name} userId={user?.id ?? null} isMember={isTeam} defaultName={profile?.display_name} />
+        {isTeam && <Link href={`/studio/${artist.id}`} className="mt-4 block text-center text-sm font-semibold text-nevoa hover:text-luar">Abrir no Studio</Link>}
+        </div>
       </div>
     </>
   );

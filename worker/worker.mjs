@@ -100,7 +100,14 @@ async function processJob(job) {
 async function main() {
   await mkdir(join(MEDIA_DIR, 'hls'), { recursive: true });
   console.log('musika worker pronto');
+  let lastHousekeeping = 0;
   while (!stopping) {
+    // a cada 5 min: encerra impulsionamentos e campanhas vencidas e expira Pix não pagos
+    if (Date.now() - lastHousekeeping > 5 * 60 * 1000) {
+      lastHousekeeping = Date.now();
+      const { error: hk } = await sb.rpc('end_expired');
+      if (hk) console.error('manutenção:', hk.message);
+    }
     try {
       const { data: job, error } = await sb.rpc('claim_transcode_job');
       if (error) { console.error('fila:', error.message); await sleep(IDLE_MS * 3); continue; }

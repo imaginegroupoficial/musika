@@ -15,9 +15,10 @@ export function Cover({ path, title, className = '' }: { path: string | null; ti
   );
 }
 
-export default function ReleaseCard({ r, rank }: { r: ReleaseCardData; rank?: number }) {
+export default function ReleaseCard({ r, rank }: { r: ReleaseCardData & { boost_id?: string }; rank?: number }) {
+  const href = r.boost_id ? `/${r.artist_slug}/${r.slug}?b=${r.boost_id}&utm_source=patrocinado` : `/${r.artist_slug}/${r.slug}`;
   return (
-    <Link href={`/${r.artist_slug}/${r.slug}`} className="group block w-full">
+    <Link href={href} className="group block w-full">
       <div className="relative">
         <Cover path={r.cover_path} title={r.title} className="transition-transform group-hover:-translate-y-0.5" />
         {rank != null && (
@@ -55,7 +56,7 @@ export function ReleaseRow({ title, href, items, ranked }: { title: string; href
       </div>
       <div className="scroll-row -mx-4 flex gap-4 overflow-x-auto px-4 pb-2 md:mx-0 md:grid md:grid-cols-4 md:gap-6 md:overflow-visible md:px-0 lg:grid-cols-6">
         {items.map((r, i) => (
-          <div key={r.release_id || r.id} className="w-36 shrink-0 md:w-auto">
+          <div key={(r as { boost_id?: string }).boost_id || r.release_id || r.id} className="w-36 shrink-0 md:w-auto">
             <ReleaseCard r={r} rank={ranked ? i + 1 : undefined} />
           </div>
         ))}

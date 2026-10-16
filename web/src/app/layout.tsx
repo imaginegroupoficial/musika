@@ -40,12 +40,17 @@ async function UserSlot() {
       <span className="mt-2 block h-1.5 overflow-hidden rounded-full bg-noite">
         <span className="block h-full rounded-full bg-mandacaru" style={{ width: `${pct}%` }} />
       </span>
+      {profile.premium_until && new Date(profile.premium_until) > new Date() && <span className="mt-2 block text-xs font-semibold text-sol">Premium</span>}
       {profile.streak > 1 && <span className="mt-2 block text-xs text-sol">{profile.streak} dias seguidos ouvindo</span>}
     </Link>
   );
 }
 
-export default function RootLayout({ children }: { children: React.ReactNode }) {
+export default async function RootLayout({ children }: { children: React.ReactNode }) {
+  const { supabase, profile } = await getSessionProfile();
+  const { data: adSetting } = await supabase.from('settings').select('value').eq('key', 'ad_every_n_tracks').maybeSingle();
+  const isPremium = !!profile?.premium_until && new Date(profile.premium_until) > new Date();
+  const adEvery = Number(adSetting?.value ?? 3);
   return (
     <html lang="pt-BR">
       <head>
@@ -61,10 +66,10 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           <Attribution />
         </Suspense>
         <div className="mx-auto flex max-w-[1400px]">
-          <SideNav userSlot={<UserSlot />} />
+          <SideNav userSlot={<UserSlot />} isAdmin={!!profile?.is_admin} isPremium={isPremium} />
           <main className="min-w-0 flex-1 px-4 pb-44 pt-5 md:px-8 md:pb-32 md:pt-8">{children}</main>
         </div>
-        <Player />
+        <Player isPremium={isPremium} adEvery={adEvery} />
         <BottomNav />
       </body>
     </html>
