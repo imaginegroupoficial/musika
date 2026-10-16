@@ -24,7 +24,7 @@ export default function ShareButton({ path, title, username, storyHref }: { path
         <ShareIcon className="h-[18px] w-[18px]" /> Compartilhar
       </button>
       {storyHref && (
-        <a href={storyHref} download="musika-story.png" className="inline-flex h-12 items-center rounded-full px-4 font-semibold text-nevoa hover:text-luar">
+        <a href={storyHref} download={`musika-${title.replace(/[^\p{L}\p{N}]+/gu, '-').toLowerCase()}.png`} className="inline-flex h-12 items-center rounded-full px-4 font-semibold text-nevoa hover:text-luar">
           Card para story
         </a>
       )}

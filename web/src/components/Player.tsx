@@ -357,6 +357,7 @@ export default function Player({ isPremium = false, adEvery = 3, audio: audioPre
             <div className="hidden flex-1 items-center justify-end gap-2 md:flex">
               <button onClick={() => setPanel(panel === 'lyrics' ? 'none' : 'lyrics')} disabled={!!ad} aria-pressed={panel === 'lyrics'} className={`h-9 rounded-full px-3 text-sm font-semibold disabled:opacity-30 ${panel === 'lyrics' ? 'bg-palco text-sol' : 'text-nevoa hover:text-luar'}`}>Letra</button>
               <button onClick={startRoom} disabled={!!ad || !track} className="h-9 rounded-full px-3 text-sm font-semibold text-nevoa hover:text-luar disabled:opacity-30">Ouvir junto</button>
+              {track && !ad && <a href={`/api/story/${track.id}`} download={`musika-${track.title.replace(/[^\p{L}\p{N}]+/gu, '-').toLowerCase()}.png`} className="inline-flex h-9 items-center rounded-full px-3 text-sm font-semibold text-nevoa hover:text-luar">Story</a>}
               <button onClick={() => setPanel(panel === 'queue' ? 'none' : 'queue')} aria-label="Fila" aria-expanded={panel === 'queue'} className={`ctl ${panel === 'queue' ? 'text-sol' : ''}`}><QueueIcon /></button>
               <VolumeIcon className="h-5 w-5 text-nevoa" />
               <input aria-label="Volume" type="range" min={0} max={1} step={0.01} value={volume} onChange={(e) => setVolume(Number(e.target.value))} className="seek w-24" />
