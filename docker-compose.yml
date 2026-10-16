@@ -1,7 +1,7 @@
 # Musika: tudo na mesma VPS. O Supabase sobe à parte (infra/install.sh) e entra na rede musika_net.
 services:
   traefik:
-    image: traefik:v3.3
+    image: traefik:v3.6
     container_name: musika-traefik
     restart: unless-stopped
     command:
