@@ -98,7 +98,14 @@ async function processJob(job) {
 }
 
 async function main() {
-  await mkdir(join(MEDIA_DIR, 'hls'), { recursive: true });
+  try {
+    await mkdir(join(MEDIA_DIR, 'hls'), { recursive: true });
+    await writeFile(join(MEDIA_DIR, 'hls', '.teste-escrita'), 'ok');
+  } catch (err) {
+    console.error(`sem permissão para gravar em ${MEDIA_DIR}:`, err.message);
+  }
+  const { error: ping } = await sb.from('transcode_jobs').select('id', { count: 'exact', head: true });
+  if (ping) console.error('não consegui falar com o Supabase:', ping.message);
   console.log('musika worker pronto');
   let lastHousekeeping = 0;
   while (!stopping) {

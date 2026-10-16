@@ -160,7 +160,7 @@ export function FanClubPlanForm({ artistId, plan }: { artistId: string; plan: { 
     >
       <Label t="Mensalidade (R$, mínimo 5)"><input type="number" min={5} step={0.5} value={price} onChange={(e) => setPrice(Number(e.target.value))} className="field" /></Label>
       <Label t="O que o sócio ganha"><textarea rows={4} value={perks} onChange={(e) => setPerks(e.target.value)} className="field" placeholder="Ex.: mural com bastidores, prioridade no camarim, sorteio mensal de camisa" /></Label>
-      <label className="flex items-center gap-3"><input type="checkbox" checked={active} onChange={(e) => setActive(e.target.checked)} className="h-5 w-5 accent-[#FFC531]" /> Fã-clube aberto para novos sócios</label>
+      <label className="flex items-center gap-3"><input type="checkbox" checked={active} onChange={(e) => setActive(e.target.checked)} className="h-5 w-5 accent-sol" /> Fã-clube aberto para novos sócios</label>
       <Save busy={busy} text="Salvar fã-clube" />
     </form>
   );
@@ -192,7 +192,7 @@ export function PostForm({ artistId }: { artistId: string }) {
     >
       <Label t="Novo post no mural"><textarea required rows={3} maxLength={2000} value={body} onChange={(e) => setBody(e.target.value)} className="field" /></Label>
       <input type="file" accept="image/jpeg,image/png,image/webp" onChange={(e) => setImg(e.target.files?.[0] || null)} className="block text-sm text-nevoa file:mr-3 file:rounded-full file:border-0 file:bg-palco file:px-4 file:py-2 file:font-semibold file:text-luar" />
-      <label className="flex items-center gap-3"><input type="checkbox" checked={only} onChange={(e) => setOnly(e.target.checked)} className="h-5 w-5 accent-[#FFC531]" /> Só para sócios do fã-clube</label>
+      <label className="flex items-center gap-3"><input type="checkbox" checked={only} onChange={(e) => setOnly(e.target.checked)} className="h-5 w-5 accent-sol" /> Só para sócios do fã-clube</label>
       <Save busy={busy} text="Publicar" />
     </form>
   );
@@ -270,7 +270,7 @@ export function InviteButton({ artistId }: { artistId: string }) {
 }
 
 export async function qrDataUrl(text: string) {
-  return QRCode.toDataURL(text, { margin: 1, width: 640, color: { dark: '#1A1240', light: '#FFFFFF' } });
+  return QRCode.toDataURL(text, { margin: 1, width: 640, color: { dark: '#15112B', light: '#FFFFFF' } });
 }
 
 export function ReleaseEditor({ release, tracks }: { release: { id: string; title: string; publish_at: string; download_allowed: boolean }; tracks: { id: string; title: string; position: number; lyrics: string | null; status: string; error: string | null }[] }) {
@@ -290,7 +290,7 @@ export function ReleaseEditor({ release, tracks }: { release: { id: string; titl
         <Label t="Título"><input required value={r.title} onChange={(e) => setR({ ...r, title: e.target.value })} className="field" /></Label>
         <Label t="Publicar em"><input type="datetime-local" value={r.publish_at} onChange={(e) => setR({ ...r, publish_at: e.target.value })} className="field" /></Label>
         <div className="flex flex-col justify-end gap-2">
-          <label className="flex items-center gap-2 text-sm"><input type="checkbox" checked={r.download_allowed} onChange={(e) => setR({ ...r, download_allowed: e.target.checked })} className="h-4 w-4 accent-[#FFC531]" /> Download liberado</label>
+          <label className="flex items-center gap-2 text-sm"><input type="checkbox" checked={r.download_allowed} onChange={(e) => setR({ ...r, download_allowed: e.target.checked })} className="h-4 w-4 accent-sol" /> Download liberado</label>
           <Save busy={busy} text="Salvar" />
         </div>
       </form>

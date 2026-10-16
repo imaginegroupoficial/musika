@@ -57,7 +57,7 @@ export default async function ArtistPage({ params }: Props) {
             {artist.verified && <CheckBadge className="h-4 w-4 text-sol" />}
             {[artist.genre, artist.city && `${artist.city}${artist.uf ? `/${artist.uf}` : ''}`].filter(Boolean).join(', ')}
           </p>
-          <h1 className="mt-1 font-display text-[clamp(2.75rem,9vw,7rem)] font-extrabold leading-[0.88] tracking-tight">{artist.name}</h1>
+          <h1 className="cartaz mt-2 text-[clamp(2.5rem,8vw,6.5rem)]">{artist.name}</h1>
           <p className="mt-3 text-nevoa">
             {formatCount(totalPlays)} plays, {formatCount(followers.count || 0)} seguidores
           </p>

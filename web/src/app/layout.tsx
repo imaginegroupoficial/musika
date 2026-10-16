@@ -1,23 +1,32 @@
 import type { Metadata, Viewport } from 'next';
 import Link from 'next/link';
 import { Suspense } from 'react';
+import '@fontsource-variable/archivo/wdth.css';
 import './globals.css';
 import Player from '@/components/Player';
 import { Attribution, BottomNav, SideNav } from '@/components/AppChrome';
+import { TextsProvider } from '@/components/TextsProvider';
 import { getSessionProfile } from '@/lib/supabase/server';
+import { getSite } from '@/lib/site';
 import { levelInfo } from '@/lib/media';
 import { SITE_URL } from '@/lib/env';
 
-export const metadata: Metadata = {
-  metadataBase: new URL(SITE_URL),
-  title: { default: 'Musika: ouça, apoie e suba de nível com seus artistas', template: '%s | Musika' },
-  description: 'Os CDs novos do forró, piseiro, arrocha e sertanejo. Ouça grátis, baixe, ganhe pontos e apareça no ranking de fãs do seu artista.',
-  manifest: '/manifest.webmanifest',
-  icons: { icon: '/icon.svg', apple: '/icon.svg' },
-  openGraph: { siteName: 'Musika', locale: 'pt_BR', type: 'website' },
-};
+export async function generateMetadata(): Promise<Metadata> {
+  const { texts, brand } = await getSite();
+  return {
+    metadataBase: new URL(SITE_URL),
+    title: { default: texts.meta_title, template: `%s | ${brand.name}` },
+    description: texts.meta_description,
+    manifest: '/manifest.webmanifest',
+    icons: { icon: '/icon.svg', apple: '/icon.svg' },
+    openGraph: { siteName: brand.name, locale: 'pt_BR', type: 'website' },
+  };
+}
 
-export const viewport: Viewport = { themeColor: '#1A1240', width: 'device-width', initialScale: 1, viewportFit: 'cover' };
+export async function generateViewport(): Promise<Viewport> {
+  const { theme } = await getSite();
+  return { themeColor: theme.colors.bg, width: 'device-width', initialScale: 1, viewportFit: 'cover' };
+}
 
 async function UserSlot() {
   const { profile } = await getSessionProfile();
@@ -30,47 +39,57 @@ async function UserSlot() {
   }
   const lv = levelInfo(profile.xp);
   const pct = lv.next ? Math.round(((profile.xp - lv.floor) / (lv.next - lv.floor)) * 100) : 100;
+  const premium = profile.premium_until && new Date(profile.premium_until) > new Date();
   return (
-    <Link href={`/perfil/${profile.username}`} className="block rounded-xl bg-lona p-3 hover:bg-palco">
-      <span className="block truncate font-semibold">{profile.display_name || profile.username}</span>
+    <Link href={`/perfil/${profile.username}`} className="block rounded-xl border border-palco bg-lona p-3 hover:border-sol">
+      <span className="flex items-center justify-between gap-2">
+        <span className="truncate font-semibold">{profile.display_name || profile.username}</span>
+        {premium && <span className="rounded-full bg-sol px-2 py-0.5 text-[10px] font-bold text-noite">PREMIUM</span>}
+      </span>
       <span className="mt-0.5 flex justify-between text-sm text-nevoa">
         <span>{lv.name}</span>
         <span className="tabular-nums">{profile.xp} pts</span>
       </span>
-      <span className="mt-2 block h-1.5 overflow-hidden rounded-full bg-noite">
+      <span className="mt-2 block h-1.5 overflow-hidden rounded-full bg-palco">
         <span className="block h-full rounded-full bg-mandacaru" style={{ width: `${pct}%` }} />
       </span>
-      {profile.premium_until && new Date(profile.premium_until) > new Date() && <span className="mt-2 block text-xs font-semibold text-sol">Premium</span>}
-      {profile.streak > 1 && <span className="mt-2 block text-xs text-sol">{profile.streak} dias seguidos ouvindo</span>}
+      {profile.streak > 1 && <span className="mt-2 block text-xs font-semibold text-chita">{profile.streak} dias seguidos ouvindo</span>}
     </Link>
   );
 }
 
 export default async function RootLayout({ children }: { children: React.ReactNode }) {
-  const { supabase, profile } = await getSessionProfile();
-  const { data: adSetting } = await supabase.from('settings').select('value').eq('key', 'ad_every_n_tracks').maybeSingle();
+  const { profile } = await getSessionProfile();
+  const { theme, texts, brand, logoUrl, adEvery } = await getSite();
   const isPremium = !!profile?.premium_until && new Date(profile.premium_until) > new Date();
-  const adEvery = Number(adSetting?.value ?? 3);
   return (
-    <html lang="pt-BR">
+    <html lang="pt-BR" className={theme.dark ? 'tema-escuro' : 'tema-claro'}>
       <head>
-        <link rel="preconnect" href="https://fonts.googleapis.com" />
-        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="" />
-        <link
-          rel="stylesheet"
-          href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&family=Figtree:wght@400;500;600;700&display=swap"
-        />
+        <style dangerouslySetInnerHTML={{ __html: theme.css }} />
       </head>
       <body className="ceu min-h-screen">
-        <Suspense>
-          <Attribution />
-        </Suspense>
-        <div className="mx-auto flex max-w-[1400px]">
-          <SideNav userSlot={<UserSlot />} isAdmin={!!profile?.is_admin} isPremium={isPremium} />
-          <main className="min-w-0 flex-1 px-4 pb-44 pt-5 md:px-8 md:pb-32 md:pt-8">{children}</main>
-        </div>
-        <Player isPremium={isPremium} adEvery={adEvery} />
-        <BottomNav />
+        <TextsProvider texts={texts}>
+          <Suspense>
+            <Attribution />
+          </Suspense>
+          <div className="mx-auto flex max-w-[1440px]">
+            <SideNav userSlot={<UserSlot />} isAdmin={!!profile?.is_admin} isPremium={isPremium} brandName={brand.name} logoUrl={logoUrl} />
+            <div className="min-w-0 flex-1">
+              <main className="px-4 pb-10 pt-5 md:px-10 md:pt-8">{children}</main>
+              <footer className="mx-4 mb-44 border-t border-palco pt-6 text-sm text-nevoa md:mx-10 md:mb-28">
+                <p>{texts.footer_text}</p>
+                <nav className="mt-3 flex flex-wrap gap-x-5 gap-y-2">
+                  <Link href="/premium" className="hover:text-luar">Premium</Link>
+                  <Link href="/anunciar" className="hover:text-luar">Anuncie</Link>
+                  <Link href="/studio" className="hover:text-luar">Para artistas</Link>
+                  <Link href="/show" className="hover:text-luar">Check-in no show</Link>
+                </nav>
+              </footer>
+            </div>
+          </div>
+          <Player isPremium={isPremium} adEvery={adEvery} />
+          <BottomNav />
+        </TextsProvider>
       </body>
     </html>
   );

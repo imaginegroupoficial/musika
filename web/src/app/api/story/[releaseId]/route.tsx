@@ -20,20 +20,20 @@ export async function GET(_req: Request, { params }: { params: { releaseId: stri
   }
   return new ImageResponse(
     (
-      <div style={{ width: '100%', height: '100%', display: 'flex', flexDirection: 'column', background: '#1A1240', color: '#F3EEFF', padding: 90, justifyContent: 'center' }}>
+      <div style={{ width: '100%', height: '100%', display: 'flex', flexDirection: 'column', background: '#3B2BFF', color: '#FFFFFF', padding: 90, justifyContent: 'center' }}>
         {cover ? (
           // eslint-disable-next-line @next/next/no-img-element
           <img src={cover} width={900} height={900} style={{ borderRadius: 48, objectFit: 'cover' }} alt="" />
         ) : (
-          <div style={{ width: 900, height: 900, borderRadius: 48, background: '#E8336D', display: 'flex' }} />
+          <div style={{ width: 900, height: 900, borderRadius: 48, background: '#FF4A8B', display: 'flex' }} />
         )}
         <div style={{ marginTop: 70, fontSize: 92, fontWeight: 800, lineHeight: 1, display: 'flex' }}>{artist}</div>
-        <div style={{ marginTop: 24, fontSize: 56, color: '#B9AEE0', display: 'flex' }}>{r.title}</div>
+        <div style={{ marginTop: 24, fontSize: 56, color: '#E4E1FF', display: 'flex' }}>{r.title}</div>
         <div style={{ marginTop: 'auto', display: 'flex', alignItems: 'flex-end', gap: 14 }}>
           {[60, 110, 150, 90].map((h, i) => (
-            <div key={i} style={{ width: 34, height: h, borderRadius: 10, background: ['#FFC531', '#E8336D', '#FFC531', '#2BB673'][i] }} />
+            <div key={i} style={{ width: 34, height: h, borderRadius: 10, background: ['#FFFFFF', '#FF4A8B', '#FFFFFF', '#15112B'][i] }} />
           ))}
-          <div style={{ marginLeft: 26, fontSize: 64, fontWeight: 800, color: '#FFC531', display: 'flex' }}>musika.tech</div>
+          <div style={{ marginLeft: 26, fontSize: 64, fontWeight: 800, color: '#FFFFFF', display: 'flex' }}>musika.tech</div>
         </div>
       </div>
     ),

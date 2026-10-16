@@ -34,15 +34,15 @@ function DailyChart({ daily }: { daily: Dash['daily'] }) {
         const bh = (d.plays / max) * h;
         return (
           <g key={d.day}>
-            <rect x={i * bw + 2} y={h - bh} width={Math.max(2, bw - 4)} height={Math.max(bh, 1)} rx={3} fill={i === daily.length - 1 ? '#FFC531' : '#E8336D'} opacity={i === daily.length - 1 ? 1 : 0.85}>
+            <rect x={i * bw + 2} y={h - bh} width={Math.max(2, bw - 4)} height={Math.max(bh, 1)} rx={3} fill={i === daily.length - 1 ? 'rgb(var(--c-primary))' : 'rgb(var(--c-accent))'} opacity={i === daily.length - 1 ? 1 : 0.85}>
               <title>{`${new Date(String(d.day).slice(0, 10) + 'T12:00:00').toLocaleDateString('pt-BR')}: ${d.plays} plays`}</title>
             </rect>
           </g>
         );
       })}
-      <text x={0} y={h + 18} fill="#B9AEE0" fontSize="12">{daily[0] && new Date(String(daily[0].day).slice(0, 10) + 'T12:00:00').toLocaleDateString('pt-BR', { day: '2-digit', month: 'short' })}</text>
-      <text x={w} y={h + 18} fill="#B9AEE0" fontSize="12" textAnchor="end">hoje</text>
-      <text x={0} y={12} fill="#B9AEE0" fontSize="12">pico de {max} plays</text>
+      <text x={0} y={h + 18} fill="rgb(var(--c-muted))" fontSize="12">{daily[0] && new Date(String(daily[0].day).slice(0, 10) + 'T12:00:00').toLocaleDateString('pt-BR', { day: '2-digit', month: 'short' })}</text>
+      <text x={w} y={h + 18} fill="rgb(var(--c-muted))" fontSize="12" textAnchor="end">hoje</text>
+      <text x={0} y={12} fill="rgb(var(--c-muted))" fontSize="12">pico de {max} plays</text>
     </svg>
   );
 }

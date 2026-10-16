@@ -4,7 +4,6 @@ WORKDIR /app
 COPY package.json ./
 RUN npm install --omit=dev --no-audit --no-fund
 COPY worker.mjs ./
-# o volume de mídia herda esse dono na primeira montagem
-RUN mkdir -p /data/media/hls && chown -R node:node /data/media
-USER node
+# roda como root: o volume de mídia é compartilhado com o nginx e pode nascer com dono root
+RUN mkdir -p /data/media/hls
 CMD ["node", "worker.mjs"]

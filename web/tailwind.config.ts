@@ -1,22 +1,24 @@
 import type { Config } from 'tailwindcss';
 
+const v = (name: string) => `rgb(var(--c-${name}) / <alpha-value>)`;
+
 const config: Config = {
   content: ['./src/**/*.{ts,tsx}'],
   theme: {
     extend: {
       colors: {
-        noite: '#1A1240',
-        lona: '#241A57',
-        palco: '#30237A',
-        sol: '#FFC531',
-        chita: '#E8336D',
-        mandacaru: '#2BB673',
-        luar: '#F3EEFF',
-        nevoa: '#B9AEE0',
+        noite: v('bg'),
+        lona: v('surface'),
+        palco: v('line'),
+        luar: v('ink'),
+        nevoa: v('muted'),
+        sol: v('primary'),
+        chita: v('accent'),
+        mandacaru: v('success'),
       },
       fontFamily: {
-        display: ['"Bricolage Grotesque"', 'system-ui', 'sans-serif'],
-        body: ['"Figtree"', 'system-ui', 'sans-serif'],
+        display: ['"Archivo Variable"', 'Archivo', 'system-ui', 'sans-serif'],
+        body: ['"Archivo Variable"', 'Archivo', 'system-ui', 'sans-serif'],
       },
       borderRadius: { capa: '14px' },
     },

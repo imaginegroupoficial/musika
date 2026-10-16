@@ -6,6 +6,7 @@ import type Hls from 'hls.js';
 import { usePlayer } from '@/store/player';
 import { formatDuration } from '@/lib/media';
 import { createClient } from '@/lib/supabase/client';
+import { useT } from './TextsProvider';
 import { NextIcon, PauseIcon, PlayIcon, PrevIcon, QueueIcon, RepeatIcon, ShuffleIcon, VolumeIcon } from './Icons';
 
 type Ad = { id: string; advertiser: string; headline: string | null; click_url: string | null; media_url: string; duration_sec: number | null };
@@ -33,6 +34,7 @@ function attribution() {
 
 export default function Player({ isPremium = false, adEvery = 3 }: { isPremium?: boolean; adEvery?: number }) {
   const router = useRouter();
+  const t = useT();
   const audioRef = useRef<HTMLAudioElement>(null);
   const hlsRef = useRef<Hls | null>(null);
   const listened = useRef(0);
@@ -295,7 +297,7 @@ export default function Player({ isPremium = false, adEvery = 3 }: { isPremium?:
                     <p className="truncate font-semibold">{ad.headline || `Anúncio de ${ad.advertiser}`}</p>
                     <p className="truncate text-sm text-nevoa">
                       Anúncio de {ad.advertiser}, {Math.max(0, Math.ceil(duration - time))} s.{' '}
-                      {!isPremium && <Link href="/premium" className="text-sol hover:underline">Ouvir sem anúncios</Link>}
+                      {!isPremium && <Link href="/premium" className="text-sol hover:underline">{t('player_ad_upsell')}</Link>}
                     </p>
                   </div>
                   {ad.click_url && (

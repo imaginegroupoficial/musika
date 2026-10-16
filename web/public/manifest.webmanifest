@@ -4,8 +4,8 @@
   "description": "Ouça, baixe e apoie seus artistas. Ganhe pontos e suba no ranking de fãs.",
   "start_url": "/?utm_source=app",
   "display": "standalone",
-  "background_color": "#1A1240",
-  "theme_color": "#1A1240",
+  "background_color": "#F1F0F6",
+  "theme_color": "#3B2BFF",
   "lang": "pt-BR",
   "icons": [
     { "src": "/icon.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "any maskable" }

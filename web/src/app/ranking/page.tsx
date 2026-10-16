@@ -1,6 +1,7 @@
 import Link from 'next/link';
 import { getSessionProfile } from '@/lib/supabase/server';
 import { levelInfo } from '@/lib/media';
+import { getSite } from '@/lib/site';
 
 export const metadata = { title: 'Ranking de fãs' };
 export const revalidate = 0;
@@ -8,14 +9,15 @@ export const revalidate = 0;
 export default async function RankingPage({ searchParams }: { searchParams: { periodo?: string } }) {
   const semanal = searchParams.periodo !== 'geral';
   const { supabase, user } = await getSessionProfile();
+  const { texts: t } = await getSite();
   const { data } = await supabase.rpc('global_ranking', { p_days: semanal ? 7 : null, p_limit: 100 });
   const rows = ((data || []) as { user_id: string; username: string; display_name: string | null; xp: number; total_xp: number }[]).filter((r) => r.xp > 0);
 
   return (
     <>
-      <h1 className="font-display text-5xl font-extrabold tracking-tight md:text-6xl">Ranking de fãs</h1>
+      <h1 className="cartaz text-[clamp(2.5rem,7vw,5rem)]">{t.ranking_title}</h1>
       <p className="mt-3 max-w-[60ch] text-nevoa">
-        Ganhe pontos ouvindo faixas até o fim, chegando cedo nos lançamentos, mantendo a sequência diária e trazendo amigos pelo seu link.
+        {t.ranking_intro}
       </p>
       <div className="mt-6 flex gap-2">
         <Link href="/ranking" className={`rounded-full px-4 py-2 text-sm font-semibold ${semanal ? 'bg-sol text-noite' : 'bg-lona text-nevoa'}`}>Esta semana</Link>

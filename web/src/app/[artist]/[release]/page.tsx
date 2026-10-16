@@ -10,6 +10,7 @@ import { CheckBadge } from '@/components/Icons';
 import Comments from '@/components/Comments';
 import AdBanner from '@/components/AdBanner';
 import ReportButton from '@/components/ReportButton';
+import { getSite } from '@/lib/site';
 import { coverUrl, formatCount, formatDuration, kindLabel } from '@/lib/media';
 
 type Props = { params: { artist: string; release: string }; searchParams?: { b?: string } };
@@ -84,7 +85,7 @@ export default async function ReleasePage({ params, searchParams }: Props) {
           </p>
           {isPublic && hoursSincePublish < 48 && (
             <p className="mt-3 inline-block rounded-full bg-mandacaru/15 px-3 py-1 text-sm font-semibold text-mandacaru">
-              Ouça até o fim nas primeiras 48 h e ganhe 10 pontos extras
+              {(await getSite()).texts.cd_early_bonus}
             </p>
           )}
           <div className="mt-6 flex flex-wrap gap-3">

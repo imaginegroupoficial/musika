@@ -87,7 +87,7 @@ export default function TrackList({ tracks, liked = [], loggedIn = false, showAr
   );
 }
 
-export function PlayAllButton({ tracks, source, label = 'Tocar' }: { tracks: TrackRow[]; source?: string; label?: string }) {
+export function PlayAllButton({ tracks, source, label = 'Tocar', className }: { tracks: TrackRow[]; source?: string; label?: string; className?: string }) {
   const { playQueue, queue, index, playing, toggle } = usePlayer();
   const list = tracks.filter((t) => t.hls_path);
   const isThis = list.length > 0 && list.some((t) => t.id === queue[index]?.id);
@@ -95,7 +95,7 @@ export function PlayAllButton({ tracks, source, label = 'Tocar' }: { tracks: Tra
     <button
       disabled={!list.length}
       onClick={() => (isThis ? toggle() : playQueue(list.map(toPlayerTrack), 0, source ?? null))}
-      className="inline-flex h-12 items-center gap-2 rounded-full bg-sol px-6 font-semibold text-noite transition-transform active:scale-95 disabled:opacity-40"
+      className={className || 'inline-flex h-12 items-center gap-2 rounded-full bg-sol px-6 font-semibold text-noite transition-transform active:scale-95 disabled:opacity-40'}
     >
       {isThis && playing ? <PauseIcon /> : <PlayIcon />}
       {isThis && playing ? 'Pausar' : label}

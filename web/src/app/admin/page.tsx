@@ -3,6 +3,10 @@ import { notFound } from 'next/navigation';
 import { getSessionProfile } from '@/lib/supabase/server';
 import RpcButton from '@/components/RpcButton';
 import SettingsForm from './settings-form';
+import AppearanceForm from './appearance-form';
+import TextsForm from './texts-form';
+import { BannerActions, BannerForm } from './banners';
+import { getSite } from '@/lib/site';
 import { adMediaUrl, brl, formatCount } from '@/lib/media';
 import { campaignStatus } from '@/lib/labels';
 
@@ -16,6 +20,9 @@ const tabs = [
   ['artistas', 'Artistas'],
   ['denuncias', 'Denúncias'],
   ['repasses', 'Repasses'],
+  ['banners', 'Banners'],
+  ['aparencia', 'Aparência'],
+  ['textos', 'Textos'],
   ['config', 'Preços e regras'],
 ] as const;
 
@@ -185,6 +192,41 @@ export default async function Admin({ searchParams }: { searchParams: { aba?: st
         </ul>
       </>
     );
+  }
+
+  if (aba === 'banners') {
+    const { data } = await supabase.from('house_banners').select('*').order('placement').order('position');
+    body = (
+      <>
+        <p className="mb-5 max-w-[64ch] text-nevoa">Banners da casa. O carrossel fica no topo da página inicial. A faixa aparece no lugar dos anúncios quando não há campanha paga rodando; sem nenhum dos dois, aparece o convite para anunciar.</p>
+        <BannerForm />
+        <ul className="mt-8 divide-y divide-palco">
+          {(data || []).map((b) => (
+            <li key={b.id} className={`flex flex-wrap items-center gap-4 py-3 ${b.active ? '' : 'opacity-50'}`}>
+              {b.image_path ? <img src={adMediaUrl(b.image_path) || ''} alt="" className="h-14 w-36 rounded-lg object-cover" /> : <span className="grid h-14 w-36 place-items-center rounded-lg bg-chita text-xs font-bold text-noite">sem imagem</span>}
+              <div className="min-w-0 flex-1">
+                <p className="truncate font-semibold">{b.title}</p>
+                <p className="text-sm text-nevoa">{b.placement === 'carrossel' ? 'Carrossel' : 'Faixa'}, ordem {b.position}{b.link_url ? `, ${b.link_url}` : ''}{b.ends_at ? `, até ${new Date(b.ends_at).toLocaleDateString('pt-BR')}` : ''}</p>
+              </div>
+              <BannerActions id={b.id} active={b.active} />
+            </li>
+          ))}
+          {!data?.length && <li className="py-3 text-nevoa">Nenhum banner ainda.</li>}
+        </ul>
+      </>
+    );
+  }
+
+  if (aba === 'aparencia') {
+    const { data } = await supabase.from('settings').select('key, value').in('key', ['theme', 'brand']);
+    const m = Object.fromEntries((data || []).map((r) => [r.key, r.value]));
+    const { logoUrl } = await getSite();
+    body = <AppearanceForm theme={(m.theme as object) || {}} brand={{ name: 'Musika', logo_path: null, ...((m.brand as object) || {}) }} logoUrl={logoUrl} />;
+  }
+
+  if (aba === 'textos') {
+    const { data } = await supabase.from('settings').select('value').eq('key', 'texts').maybeSingle();
+    body = <TextsForm overrides={(data?.value as Record<string, string>) || {}} />;
   }
 
   if (aba === 'config') {

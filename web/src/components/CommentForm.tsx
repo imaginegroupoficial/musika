@@ -39,7 +39,7 @@ export default function CommentForm({ releaseId, trackIds }: { releaseId: string
       <div className="mt-2 flex flex-wrap items-center justify-between gap-3">
         {onThisRelease ? (
           <label className="flex items-center gap-2 text-sm text-nevoa">
-            <input type="checkbox" checked={mark} onChange={(e) => setMark(e.target.checked)} className="h-4 w-4 accent-[#FFC531]" />
+            <input type="checkbox" checked={mark} onChange={(e) => setMark(e.target.checked)} className="h-4 w-4 accent-sol" />
             Marcar o momento: {current.title} aos {formatDuration(at) || '0:00'}
           </label>
         ) : <span />}

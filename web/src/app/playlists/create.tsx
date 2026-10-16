@@ -25,8 +25,8 @@ export default function CreatePlaylist() {
         <button disabled={busy} className="h-12 shrink-0 rounded-full bg-sol px-6 font-semibold text-noite">Criar</button>
       </div>
       <div className="mt-3 flex flex-wrap gap-5 text-sm">
-        <label className="flex items-center gap-2"><input type="checkbox" checked={collab} onChange={(e) => setCollab(e.target.checked)} className="h-4 w-4 accent-[#FFC531]" /> Colaborativa: amigos com o link adicionam faixas</label>
-        <label className="flex items-center gap-2"><input type="checkbox" checked={priv} onChange={(e) => setPriv(e.target.checked)} className="h-4 w-4 accent-[#FFC531]" /> Privada</label>
+        <label className="flex items-center gap-2"><input type="checkbox" checked={collab} onChange={(e) => setCollab(e.target.checked)} className="h-4 w-4 accent-sol" /> Colaborativa: amigos com o link adicionam faixas</label>
+        <label className="flex items-center gap-2"><input type="checkbox" checked={priv} onChange={(e) => setPriv(e.target.checked)} className="h-4 w-4 accent-sol" /> Privada</label>
       </div>
     </form>
   );

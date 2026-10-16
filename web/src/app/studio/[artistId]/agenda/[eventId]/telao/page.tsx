@@ -3,6 +3,7 @@ import { useEffect, useState } from 'react';
 import { useParams } from 'next/navigation';
 import { createClient } from '@/lib/supabase/client';
 import { qrDataUrl } from '@/components/studio/Forms';
+import { useT } from '@/components/TextsProvider';
 
 // Tela para projetar no telão do show. O código muda a cada 30 s, então print não vale.
 export default function Telao() {
@@ -10,6 +11,7 @@ export default function Telao() {
   const [code, setCode] = useState<string | null>(null);
   const [qr, setQr] = useState<string | null>(null);
   const [error, setError] = useState(false);
+  const t = useT();
 
   useEffect(() => {
     let alive = true;
@@ -28,9 +30,9 @@ export default function Telao() {
   if (error) return <p className="text-chita">Sem acesso a este show.</p>;
   return (
     <div className="flex min-h-[70vh] flex-col items-center justify-center text-center">
-      <p className="font-display text-3xl font-bold md:text-5xl">Aponte a câmera e ganhe 50 pontos</p>
+      <p className="cartaz text-3xl md:text-6xl">{t('telao_title')}</p>
       {qr ? <img src={qr} alt="QR Code de check-in" className="mt-8 w-[min(70vw,460px)] rounded-3xl" /> : <div className="mt-8 h-[460px] w-[460px] max-w-[70vw] animate-pulse rounded-3xl bg-lona" />}
-      <p className="mt-6 text-nevoa">Sem câmera? Entre em musika.tech/show e digite o código</p>
+      <p className="mt-6 text-nevoa">{t('telao_hint')}</p>
       <p className="font-display text-6xl font-extrabold tracking-[0.25em] text-sol md:text-8xl">{code || '······'}</p>
     </div>
   );

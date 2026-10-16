@@ -141,7 +141,7 @@ export default function NovoLancamento() {
             </label>
           </div>
           <label className="flex items-center gap-3">
-            <input type="checkbox" checked={download} onChange={(e) => setDownload(e.target.checked)} className="h-5 w-5 accent-[#FFC531]" />
+            <input type="checkbox" checked={download} onChange={(e) => setDownload(e.target.checked)} className="h-5 w-5 accent-sol" />
             <span>Permitir que os fãs baixem as faixas</span>
           </label>
           <p className="text-sm text-nevoa">Deixe a data em branco para publicar assim que a conversão terminar.</p>

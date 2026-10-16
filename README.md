@@ -7,7 +7,8 @@ Plataforma de música para artistas independentes e seus fãs.
 - **Artista (Studio)**: upload pelo celular com conversão automática, edição de faixas e letras, painel de dados, agenda com telão de check-in, missões, recompensas e resgates, fã-clube pago com mural exclusivo, impulsionamento pago de lançamento e equipe com convite por link.
 - **Anúncios (rede própria)**: áudio entre faixas e banners, segmentação por estilo e estado, cobrança por CPM com orçamento pré-pago, análise antes de ir ao ar e relatório para o anunciante.
 - **Pagamentos**: Pix via Pagar.me para Premium, fã-clube, impulsionamento e campanhas.
-- **Administração** (`/admin`): visão geral e receita, aprovação de campanhas, pagamentos, verificação de artistas, denúncias, repasses do fã-clube e preços.
+- **Administração** (`/admin`): visão geral e receita, aprovação de campanhas, pagamentos, verificação de artistas, denúncias, repasses do fã-clube, banners da casa, aparência (tema, cores, nome e logo), textos do site e preços.
+- **Identidade**: tema Cartaz (claro, azul elétrico e rosa) com a fonte Archivo esticada como letra de cartaz de show, hospedada no próprio servidor. Temas Noite de São João e Paredão (escuros) prontos no admin.
 
 Tudo roda numa VPS só (Hostinger KVM 8, Ubuntu 24.04) com o domínio `musika.tech`.
 

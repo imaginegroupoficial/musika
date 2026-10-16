@@ -2,6 +2,7 @@ import Link from 'next/link';
 import { getSessionProfile } from '@/lib/supabase/server';
 import { brl } from '@/lib/media';
 import { campaignStatus } from '@/lib/labels';
+import { getSite } from '@/lib/site';
 
 export const metadata = { title: 'Anunciar no Musika' };
 export const revalidate = 0;
@@ -9,6 +10,7 @@ export const revalidate = 0;
 
 export default async function Anunciar() {
   const { supabase, user } = await getSessionProfile();
+  const { texts: t } = await getSite();
   const { data: rows } = await supabase.from('settings').select('key, value').in('key', ['cpm_audio_cents', 'cpm_banner_cents', 'min_campaign_cents']);
   const cfg = Object.fromEntries((rows || []).map((r) => [r.key, Number(r.value)]));
   const { data: campaigns } = user
@@ -17,9 +19,9 @@ export default async function Anunciar() {
 
   return (
     <>
-      <h1 className="font-display text-[clamp(2.5rem,7vw,5rem)] font-extrabold leading-[0.9] tracking-tight">Sua marca no ouvido de quem ama forró.</h1>
+      <h1 className="cartaz max-w-[18ch] text-[clamp(2.5rem,6.5vw,5rem)]">{t.ads_title}</h1>
       <p className="mt-5 max-w-[60ch] text-lg text-nevoa">
-        Anuncie em áudio entre as faixas ou em banner nas páginas mais vistas. Escolha estilo musical e estado, defina o orçamento e pague no Pix. Você só gasta quando o anúncio aparece.
+        {t.ads_intro}
       </p>
 
       <div className="mt-8 grid max-w-3xl gap-4 sm:grid-cols-3">

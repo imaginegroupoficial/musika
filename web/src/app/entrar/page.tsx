@@ -3,6 +3,7 @@ import Link from 'next/link';
 import { Suspense, useState } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { createClient } from '@/lib/supabase/client';
+import { useT } from '@/components/TextsProvider';
 
 function Form() {
   const [mode, setMode] = useState<'entrar' | 'criar'>('entrar');
@@ -12,6 +13,7 @@ function Form() {
   const [error, setError] = useState<string | null>(null);
   const [busy, setBusy] = useState(false);
   const [waiting, setWaiting] = useState<string | null>(null);
+  const tx = useT();
   const router = useRouter();
   const params = useSearchParams();
   const back = params.get('voltar') || '/';
@@ -67,10 +69,10 @@ function Form() {
     <div className="mx-auto max-w-md py-10">
       {linkError && <p className="mb-6 rounded-lg bg-chita/15 px-4 py-3 text-sm">Esse link já foi usado ou venceu. Entre com sua senha ou peça um link novo.</p>}
       <h1 className="font-display text-5xl font-extrabold leading-[0.95] tracking-tight">
-        {mode === 'entrar' ? 'Bem-vindo de volta.' : 'Crie sua conta e comece a pontuar.'}
+        {mode === 'entrar' ? tx('login_title') : tx('signup_title')}
       </h1>
       <p className="mt-4 text-nevoa">
-        {mode === 'entrar' ? 'Seus pontos, curtidas e artistas seguidos estão te esperando.' : 'Cada faixa ouvida até o fim vale ponto no ranking do seu artista.'}
+        {mode === 'entrar' ? tx('login_text') : tx('signup_text')}
       </p>
       <form onSubmit={submit} className="mt-8 space-y-4">
         {mode === 'criar' && (
