@@ -1,0 +1,101 @@
+# Musika: tudo na mesma VPS. O Supabase sobe à parte (infra/install.sh) e entra na rede musika_net.
+services:
+  traefik:
+    image: traefik:v3.6
+    container_name: musika-traefik
+    restart: unless-stopped
+    command:
+      - --providers.docker=true
+      - --providers.docker.exposedbydefault=false
+      - --providers.docker.network=musika_net
+      - --entrypoints.web.address=:80
+      - --entrypoints.web.http.redirections.entrypoint.to=websecure
+      - --entrypoints.web.http.redirections.entrypoint.scheme=https
+      - --entrypoints.websecure.address=:443
+      - --certificatesresolvers.le.acme.tlschallenge=true
+      - --certificatesresolvers.le.acme.email=${ACME_EMAIL}
+      - --certificatesresolvers.le.acme.storage=/letsencrypt/acme.json
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+      - letsencrypt:/letsencrypt
+    networks: [musika_net]
+
+  web:
+    build:
+      context: ./web
+      args:
+        NEXT_PUBLIC_SUPABASE_URL: https://db.${DOMAIN}
+        NEXT_PUBLIC_SUPABASE_ANON_KEY: ${ANON_KEY}
+        NEXT_PUBLIC_MEDIA_URL: https://media.${DOMAIN}
+        NEXT_PUBLIC_SITE_URL: https://${DOMAIN}
+    container_name: musika-web
+    restart: unless-stopped
+    environment:
+      SUPABASE_INTERNAL_URL: http://supabase-gw:8000
+      SUPABASE_SERVICE_ROLE_KEY: ${SERVICE_ROLE_KEY}
+      PAGARME_SECRET_KEY: ${PAGARME_SECRET_KEY:-}
+      PAGARME_WEBHOOK_TOKEN: ${PAGARME_WEBHOOK_TOKEN:-}
+      VAPID_PUBLIC_KEY: ${VAPID_PUBLIC_KEY:-}
+    deploy:
+      resources:
+        limits: { memory: 2g }
+    labels:
+      - traefik.enable=true
+      - traefik.http.routers.musika-web.rule=Host(`${DOMAIN}`) || Host(`www.${DOMAIN}`)
+      - traefik.http.routers.musika-web.entrypoints=websecure
+      - traefik.http.routers.musika-web.tls.certresolver=le
+      - traefik.http.services.musika-web.loadbalancer.server.port=3000
+    networks: [musika_net]
+
+  worker:
+    build: ./worker
+    container_name: musika-worker
+    restart: unless-stopped
+    environment:
+      SUPABASE_URL: http://supabase-gw:8000
+      SUPABASE_SERVICE_ROLE_KEY: ${SERVICE_ROLE_KEY}
+      MEDIA_DIR: /data/media
+      SITE_URL: https://${DOMAIN}
+      PUBLIC_SUPABASE_URL: https://db.${DOMAIN}
+      VAPID_PUBLIC_KEY: ${VAPID_PUBLIC_KEY:-}
+      VAPID_PRIVATE_KEY: ${VAPID_PRIVATE_KEY:-}
+      VAPID_SUBJECT: mailto:${ACME_EMAIL}
+      SMTP_HOST: ${SMTP_HOST:-}
+      SMTP_PORT: ${SMTP_PORT:-465}
+      SMTP_USER: ${SMTP_USER:-}
+      SMTP_PASS: ${SMTP_PASS:-}
+      SMTP_FROM: ${SMTP_FROM:-}
+    volumes:
+      - media:/data/media
+    deploy:
+      resources:
+        limits: { memory: 3g, cpus: "2" }
+    networks: [musika_net]
+
+  media:
+    image: nginx:1.27-alpine
+    container_name: musika-media
+    restart: unless-stopped
+    volumes:
+      - media:/usr/share/nginx/media:ro
+      - ./infra/nginx-media.conf:/etc/nginx/conf.d/default.conf:ro
+    environment:
+      ALLOWED_ORIGIN: https://${DOMAIN}
+    labels:
+      - traefik.enable=true
+      - traefik.http.routers.musika-media.rule=Host(`media.${DOMAIN}`)
+      - traefik.http.routers.musika-media.entrypoints=websecure
+      - traefik.http.routers.musika-media.tls.certresolver=le
+      - traefik.http.services.musika-media.loadbalancer.server.port=80
+    networks: [musika_net]
+
+volumes:
+  media:
+  letsencrypt:
+
+networks:
+  musika_net:
+    external: true

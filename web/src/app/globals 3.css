@@ -1,0 +1,66 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Cores padrão (tema Paredão Play). O layout sobrescreve com o tema escolhido no /admin. */
+:root {
+  --c-bg: 11 11 15; --c-surface: 22 22 29; --c-line: 38 38 47; --c-ink: 245 245 245;
+  --c-muted: 156 156 168; --c-primary: 255 45 85; --c-accent: 255 45 85; --c-success: 43 213 118; --c-on-primary: 255 255 255;
+}
+html, body { background: rgb(var(--c-bg)); color: rgb(var(--c-ink)); }
+body { font-family: 'Montserrat Variable', 'Montserrat', system-ui, sans-serif; -webkit-font-smoothing: antialiased; }
+
+h1, h2, h3, .font-display { font-family: 'Montserrat Variable', 'Montserrat', system-ui, sans-serif; letter-spacing: -0.02em; }
+h1 { letter-spacing: -0.03em; }
+/* a voz do Paredão Play: caixa alta, peso máximo */
+.cartaz { text-transform: uppercase; font-weight: 900; letter-spacing: -0.03em; line-height: 0.92; }
+/* a assinatura da logo: itálico pesado */
+.marca { font-style: italic; font-weight: 900; text-transform: uppercase; letter-spacing: -0.02em; line-height: 0.85; }
+
+/* texto sobre a cor principal (botões vermelhos com letra branca) */
+.bg-sol.text-noite, .bg-sol .text-noite, .bg-chita.text-noite { color: rgb(var(--c-on-primary)); }
+
+/* brilho vermelho de palco */
+.palco-glow { background: radial-gradient(60% 80% at 75% 30%, rgb(var(--c-primary) / .45), transparent 70%), radial-gradient(40% 60% at 95% 90%, rgb(var(--c-primary) / .25), transparent 70%); }
+
+:focus-visible { outline: 2px solid rgb(var(--c-primary)); outline-offset: 2px; border-radius: 6px; }
+
+@layer components {
+  .ctl { display: inline-grid; place-items: center; height: 2.5rem; width: 2.5rem; border-radius: 9999px; color: rgb(var(--c-muted)); }
+  .ctl:hover { color: rgb(var(--c-ink)); background: rgb(var(--c-line)); }
+  .field { height: 3rem; width: 100%; border-radius: 12px; background: rgb(var(--c-surface)); border: 1px solid rgb(var(--c-line)); padding: 0 1rem; color: rgb(var(--c-ink)); outline: none; }
+  .field:focus { border-color: rgb(var(--c-primary)); }
+  .field::placeholder { color: rgb(var(--c-muted) / .7); }
+}
+textarea.field { height: auto; padding: .75rem 1rem; }
+select.field { appearance: auto; }
+
+.seek { -webkit-appearance: none; appearance: none; height: 14px; background: transparent; cursor: pointer; }
+.seek::-webkit-slider-runnable-track { height: 4px; border-radius: 4px; background: rgb(var(--c-line)); }
+.seek::-moz-range-track { height: 4px; border-radius: 4px; background: rgb(var(--c-line)); }
+.seek::-moz-range-progress { height: 4px; border-radius: 4px; background: rgb(var(--c-primary)); }
+.seek::-webkit-slider-thumb { -webkit-appearance: none; margin-top: -4px; height: 12px; width: 12px; border-radius: 50%; background: rgb(var(--c-primary)); }
+.seek::-moz-range-thumb { height: 12px; width: 12px; border: 0; border-radius: 50%; background: rgb(var(--c-primary)); }
+
+/* o paredão: cinco caixas de som que só pulsam quando a música toca */
+.paredao { align-items: flex-end; gap: 3px; height: 26px; }
+.paredao span { width: 5px; height: 6px; border-radius: 2px; background: rgb(var(--c-accent)); transition: height .3s; }
+.paredao span:nth-child(2) { background: rgb(var(--c-primary)); }
+.paredao span:nth-child(4) { background: rgb(var(--c-success)); }
+.paredao.is-on span { animation: pulsar 0.9s ease-in-out infinite; }
+.paredao.is-on span:nth-child(2) { animation-delay: -.45s; animation-duration: .7s; }
+.paredao.is-on span:nth-child(3) { animation-delay: -.2s; animation-duration: 1.1s; }
+.paredao.is-on span:nth-child(4) { animation-delay: -.6s; animation-duration: .8s; }
+.paredao.is-on span:nth-child(5) { animation-delay: -.3s; }
+@keyframes pulsar { 0%, 100% { height: 6px; } 50% { height: 26px; } }
+
+.toast-in { animation: toastIn .25s ease-out; }
+@keyframes toastIn { from { transform: translateY(8px); opacity: 0; } to { transform: none; opacity: 1; } }
+
+.scroll-row { scrollbar-width: none; }
+.scroll-row::-webkit-scrollbar { display: none; }
+
+@media (prefers-reduced-motion: reduce) {
+  .paredao.is-on span { animation: none; height: 16px; }
+  .toast-in { animation: none; }
+}
