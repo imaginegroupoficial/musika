@@ -5,10 +5,17 @@
 # Rodar de novo é seguro: só aplica o que falta e reconstrói o site.
 set -euo pipefail
 
-DOMAIN="${DOMAIN:-musika.tech}"
 APP_ENV_FILE="$(cd "$(dirname "$0")/.." && pwd)/.env"
 # valores já salvos numa instalação anterior continuam valendo se não forem passados de novo
 prev() { [ -f "$APP_ENV_FILE" ] && grep "^$1=" "$APP_ENV_FILE" | head -1 | cut -d= -f2- || true; }
+# domínio: o passado agora, senão o da instalação anterior, senão o padrão
+PREV_DOMAIN="$(prev DOMAIN)"
+DOMAIN="${DOMAIN:-${PREV_DOMAIN:-musika.tech}}"
+# domínios antigos continuam no ar só para redirecionar ao novo (links salvos e app instalado no celular)
+OLD_DOMAINS="${OLD_DOMAINS:-$(prev OLD_DOMAINS)}"
+if [ -n "$PREV_DOMAIN" ] && [ "$PREV_DOMAIN" != "$DOMAIN" ]; then
+  OLD_DOMAINS="$(printf '%s\n' $(echo "$OLD_DOMAINS" | tr ',' ' ') "$PREV_DOMAIN" | grep -vx "$DOMAIN" | sort -u | paste -sd, -)"
+fi
 ACME_EMAIL="${ACME_EMAIL:-$(prev ACME_EMAIL)}"
 ACME_EMAIL="${ACME_EMAIL:-admin@${DOMAIN}}"
 ADMIN_EMAIL="${ADMIN_EMAIL:-$(prev ADMIN_EMAIL)}"
@@ -85,10 +92,6 @@ cd "$SB_DIR"
 if [ ! -f .env ]; then
   cp .env.example .env
   sh utils/generate-keys.sh --update-env >/dev/null
-  set_env .env SITE_URL "https://${DOMAIN}"
-  set_env .env ADDITIONAL_REDIRECT_URLS "https://${DOMAIN}/**,https://www.${DOMAIN}/**"
-  set_env .env API_EXTERNAL_URL "https://db.${DOMAIN}"
-  set_env .env SUPABASE_PUBLIC_URL "https://db.${DOMAIN}"
   set_env .env ENABLE_EMAIL_SIGNUP true
   set_env .env ENABLE_EMAIL_AUTOCONFIRM true
   set_env .env DISABLE_SIGNUP false
@@ -101,6 +104,12 @@ if [ ! -f .env ]; then
   set_env .env STUDIO_DEFAULT_ORGANIZATION Musika
   set_env .env STUDIO_DEFAULT_PROJECT Musika
 fi
+
+# endereços públicos do login: regravados a cada execução para acompanhar troca de domínio
+set_env .env SITE_URL "https://${DOMAIN}"
+set_env .env ADDITIONAL_REDIRECT_URLS "https://${DOMAIN}/**,https://www.${DOMAIN}/**"
+set_env .env API_EXTERNAL_URL "https://db.${DOMAIN}"
+set_env .env SUPABASE_PUBLIC_URL "https://db.${DOMAIN}"
 
 # e-mails: com SMTP configurado E testado, a conta só ativa depois de confirmar o e-mail.
 # Se o teste falhar, o cadastro continua funcionando sem confirmação (e o motivo aparece no final).
@@ -205,6 +214,7 @@ ANON_KEY="$(get_env "$SB_DIR/.env" ANON_KEY)"
 SERVICE_ROLE_KEY="$(get_env "$SB_DIR/.env" SERVICE_ROLE_KEY)"
 cat > .env <<EOF
 DOMAIN=${DOMAIN}
+OLD_DOMAINS=${OLD_DOMAINS}
 ACME_EMAIL=${ACME_EMAIL}
 ADMIN_EMAIL=${ADMIN_EMAIL}
 ANON_KEY=${ANON_KEY}
@@ -220,6 +230,23 @@ VAPID_PUBLIC_KEY=${VAPID_PUBLIC_KEY}
 VAPID_PRIVATE_KEY=${VAPID_PRIVATE_KEY}
 EOF
 chmod 600 .env "$SB_DIR/.env"
+# redireciona domínios antigos para o novo (301), com HTTPS próprio em cada um
+rm -f docker-compose.override.yml
+if [ -n "$OLD_DOMAINS" ]; then
+  RULE="$(echo "$OLD_DOMAINS" | tr ',' '\n' | sed '/^$/d' | while read -r d; do printf 'Host(`%s`) || Host(`www.%s`) || ' "$d" "$d"; done | sed 's/ || $//')"
+  cat > docker-compose.override.yml <<OVR
+services:
+  web:
+    labels:
+      - traefik.http.routers.musika-antigo.rule=${RULE}
+      - traefik.http.routers.musika-antigo.entrypoints=websecure
+      - traefik.http.routers.musika-antigo.tls.certresolver=le
+      - traefik.http.routers.musika-antigo.middlewares=musika-antigo
+      - traefik.http.middlewares.musika-antigo.redirectregex.regex=^https?://[^/]+/(.*)
+      - traefik.http.middlewares.musika-antigo.redirectregex.replacement=https://${DOMAIN}/\$\${1}
+      - traefik.http.middlewares.musika-antigo.redirectregex.permanent=true
+OVR
+fi
 docker compose -p musika up -d --build
 
 log "8/8 Backup diário do banco (03:30) em /opt/musika-backups"

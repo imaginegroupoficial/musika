@@ -47,6 +47,19 @@ cd /opt/musika && git pull && bash infra/install.sh
 
 Rodar de novo é seguro: migrations já aplicadas são puladas.
 
+## Trocar de domínio
+
+1. No DNS do domínio novo, crie registros **A** para a raiz, `www`, `db` e `media` apontando para o IP da VPS. Espere propagar (confira com `ping novodominio.com.br`).
+2. Rode o install com o domínio novo:
+
+```
+cd /opt/musika && DOMAIN=novodominio.com.br bash infra/install.sh
+```
+
+O install guarda o domínio novo (as próximas atualizações não precisam repetir `DOMAIN=`), refaz os endereços de login e dos e-mails, reconstrói o site e gera os certificados HTTPS. O domínio antigo continua no ar só redirecionando para o novo, desde que o DNS dele siga apontando para a VPS.
+
+Depois da troca: atualize o webhook no painel do Pagar.me (o install imprime o endereço novo) e, se quiser o remetente dos e-mails no domínio novo, verifique o domínio no Resend e rode o install com `SMTP_FROM=nao-responda@novodominio.com.br`.
+
 ## Primeiro uso
 
 1. Abra https://musika.tech, clique em **Entrar** e crie sua conta.
