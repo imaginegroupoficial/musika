@@ -55,7 +55,7 @@ export default async function Biblioteca() {
 
   return (
     <>
-      <h1 className="font-display text-5xl font-extrabold tracking-tight md:text-6xl">Sua biblioteca</h1>
+      <h1 className="titulo">Sua biblioteca</h1>
       <nav className="mt-5 flex flex-wrap gap-2 md:hidden">
         {[['/conta', 'Minha conta'], ['/playlists', 'Playlists'], ['/retrospectiva', 'Retrospectiva'], ['/premium', 'Premium'], ['/anunciar', 'Anunciar'], ['/studio', 'Sou artista']].map(([h, l]) => (
           <Link key={h} href={h} className="rounded-full bg-lona px-4 py-2 text-sm font-semibold">{l}</Link>

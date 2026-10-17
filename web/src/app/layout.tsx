@@ -70,11 +70,19 @@ export default async function RootLayout({ children }: { children: React.ReactNo
             <MobileHeader user={user} bell={bell} brandName={brand.name} logoUrl={logoUrl} />
           </Suspense>
           <div className="mx-auto max-w-[1440px]">
-            <main className="px-4 pb-10 pt-5 md:px-10 md:pt-8">{children}</main>
+            <main className="px-4 pb-10 pt-5 md:px-10 md:pt-8">
+              {profile?.blocked_at ? (
+                <section className="mx-auto max-w-lg py-16 text-center">
+                  <h1 className="titulo">Conta bloqueada</h1>
+                  <p className="mt-4 text-nevoa">Esta conta foi bloqueada pela administração{profile.blocked_reason ? `: ${profile.blocked_reason}` : '.'} Se acha que foi um engano, fale com a gente.</p>
+                  <form action="/sair" method="post" className="mt-8"><button className="h-11 rounded-full border border-palco px-6 font-semibold">Sair</button></form>
+                </section>
+              ) : children}
+            </main>
             <footer className="mx-4 mb-44 border-t border-palco pt-8 text-sm text-nevoa md:mx-10 md:mb-28">
               <div className="flex flex-wrap items-center justify-between gap-6">
                 <span className="flex items-center gap-5">
-                  <Logo name={brand.name} logoUrl={logoUrl} size="xl" stacked />
+                  <Logo name={brand.name} logoUrl={logoUrl} size="lg" stacked />
                   <span className="hidden h-10 w-px bg-palco sm:block" />
                   <span className="hidden text-xs font-semibold uppercase tracking-[0.35em] sm:block">{texts.brand_tagline}</span>
                 </span>

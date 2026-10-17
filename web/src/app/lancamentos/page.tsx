@@ -21,7 +21,7 @@ export default async function Lancamentos() {
   const groups = ['Hoje', 'Esta semana', 'Este mês', 'Antes'].map((g) => [g, items.filter((r) => bucket(r.publish_at) === g)] as const).filter(([, l]) => l.length);
   return (
     <>
-      <h1 className="cartaz text-[clamp(2.5rem,6vw,4.5rem)]">Lançamentos</h1>
+      <h1 className="titulo">Lançamentos</h1>
       <p className="mt-3 max-w-[60ch] text-nevoa">Tudo que saiu no Paredão Play, do mais novo para o mais antigo. Ouça nas primeiras 48 horas e ganhe pontos extras.</p>
       {!items.length && <p className="mt-8 text-nevoa">Nenhum lançamento ainda.</p>}
       {groups.map(([g, list], i) => (

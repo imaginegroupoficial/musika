@@ -297,10 +297,10 @@ export function ReleaseEditor({ release, tracks }: { release: { id: string; titl
       <ol className="mt-6 divide-y divide-lona">
         {ts.map((t, i) => (
           <li key={t.id} className="py-3">
-            <div className="flex items-center gap-3">
+            <div className="flex flex-wrap items-center gap-x-3 gap-y-2">
               <span className="w-6 text-right text-sm text-nevoa">{t.position}</span>
-              <input value={t.title} onChange={(e) => setTs(ts.map((x, k) => (k === i ? { ...x, title: e.target.value } : x)))} className="h-10 min-w-0 flex-1 rounded-lg bg-lona px-3 outline-none focus:ring-2 focus:ring-sol" aria-label={`Título da faixa ${t.position}`} />
-              <span className={`text-xs font-semibold ${t.status === 'ready' ? 'text-mandacaru' : t.status === 'error' ? 'text-chita' : 'text-sol'}`}>{{ ready: 'pronta', error: 'erro', pending: 'na fila', processing: 'convertendo' }[t.status]}</span>
+              <input value={t.title} onChange={(e) => setTs(ts.map((x, k) => (k === i ? { ...x, title: e.target.value } : x)))} className="h-10 min-w-0 flex-1 basis-[calc(100%-2.25rem)] rounded-lg bg-lona px-3 outline-none focus:ring-2 focus:ring-sol sm:basis-0" aria-label={`Título da faixa ${t.position}`} />
+              <span className={`ml-9 text-xs font-semibold sm:ml-0 ${t.status === 'ready' ? 'text-mandacaru' : t.status === 'error' ? 'text-chita' : 'text-sol'}`}>{{ ready: 'pronta', error: 'erro', pending: 'na fila', processing: 'convertendo' }[t.status]}</span>
               <button type="button" onClick={() => setOpen(open === t.id ? null : t.id)} className="h-9 rounded-full px-3 text-sm font-semibold text-nevoa hover:text-luar">Letra</button>
               <button type="button" onClick={() => saveTrack(t)} disabled={busy} className="h-9 rounded-full border border-luar/40 px-4 text-sm font-semibold">Salvar</button>
             </div>

@@ -72,7 +72,7 @@ export default async function ReleasePage({ params, searchParams }: Props) {
         <div className="max-w-[280px]"><Cover path={release.cover_path} title={release.title} /></div>
         <div className="min-w-0">
           <p className="text-sm font-semibold text-nevoa">{kindLabel[release.kind] || 'CD'}</p>
-          <h1 className="mt-1 font-display text-[clamp(2.25rem,6vw,4.75rem)] font-extrabold leading-[0.92] tracking-tight">{release.title}</h1>
+          <h1 className="titulo-xl mt-1">{release.title}</h1>
           <p className="mt-3 flex flex-wrap items-center gap-x-2 text-nevoa">
             <Link href={`/${artist.slug}`} className="flex items-center gap-1 font-semibold text-luar hover:underline">
               {artist.name}

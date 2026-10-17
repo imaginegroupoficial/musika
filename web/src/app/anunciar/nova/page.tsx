@@ -104,7 +104,7 @@ export default function NovaCampanha() {
 
   return (
     <form onSubmit={submit} className="max-w-3xl">
-      <h1 className="font-display text-5xl font-extrabold leading-[0.95] tracking-tight">Nova campanha</h1>
+      <h1 className="titulo">Nova campanha</h1>
 
       <div className="mt-8 grid grid-cols-2 gap-3 sm:max-w-md">
         {(['audio', 'banner'] as const).map((k) => (

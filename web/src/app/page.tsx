@@ -91,8 +91,8 @@ export default async function Home() {
       {(artists.data || []).length > 0 && (
         <section className="mt-10">
           <div className="mb-4 flex items-baseline justify-between gap-4">
-            <h2 className="font-display text-2xl font-bold tracking-tight"><Link href="/artistas" className="inline-flex items-center gap-2 hover:text-sol">{t.home_artists_title}<span className="text-sol" aria-hidden>›</span></Link></h2>
-            <Link href="/artistas" className="text-sm font-semibold text-sol hover:underline">Ver todos</Link>
+            <h2 className="min-w-0 truncate font-display text-xl font-bold tracking-tight md:text-2xl"><Link href="/artistas" className="inline-flex items-center gap-2 hover:text-sol">{t.home_artists_title}<span className="text-sol" aria-hidden>›</span></Link></h2>
+            <Link href="/artistas" className="shrink-0 whitespace-nowrap text-sm font-semibold text-sol hover:underline">Ver todos</Link>
           </div>
           <div className="scroll-row -mx-4 flex gap-5 overflow-x-auto px-4 pb-2 md:mx-0 md:px-0">
             {(artists.data || []).map((a) => (

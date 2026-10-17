@@ -19,7 +19,7 @@ export default async function Anunciar() {
 
   return (
     <>
-      <h1 className="cartaz max-w-[18ch] text-[clamp(2.5rem,6.5vw,5rem)]">{t.ads_title}</h1>
+      <h1 className="titulo-xl max-w-[18ch]">{t.ads_title}</h1>
       <p className="mt-5 max-w-[60ch] text-lg text-nevoa">
         {t.ads_intro}
       </p>

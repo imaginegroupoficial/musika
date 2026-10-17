@@ -50,7 +50,7 @@ export default async function TopPage({ searchParams }: { searchParams: { janela
 
   return (
     <>
-      <h1 className="cartaz text-[clamp(2.5rem,6vw,4.5rem)]">Explorar</h1>
+      <h1 className="titulo">Explorar</h1>
       <nav aria-label="Estilos" className="scroll-row -mx-4 mt-6 flex gap-2 overflow-x-auto px-4 pb-1 md:mx-0 md:flex-wrap md:px-0">
         <Link href={qs({ estilo: null })} className={`shrink-0 rounded-full border px-4 py-2 text-sm font-semibold ${!estilo ? 'border-sol bg-sol text-noite' : 'border-palco text-nevoa hover:border-sol hover:text-luar'}`}>Todos os estilos</Link>
         {GENRES.filter((g) => g !== 'Outro').map((g) => (

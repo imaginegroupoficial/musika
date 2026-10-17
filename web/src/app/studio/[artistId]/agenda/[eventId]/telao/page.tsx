@@ -10,6 +10,8 @@ import { useT } from '@/components/TextsProvider';
 export default function Telao() {
   const { eventId } = useParams<{ eventId: string }>();
   const [code, setCode] = useState<string | null>(null);
+  const [host, setHost] = useState('');
+  useEffect(() => setHost(window.location.host), []);
   const [qr, setQr] = useState<string | null>(null);
   const [error, setError] = useState(false);
   const t = useT();
@@ -33,8 +35,9 @@ export default function Telao() {
     <div className="flex min-h-[70vh] flex-col items-center justify-center text-center">
       <p className="cartaz text-3xl md:text-6xl">{t('telao_title')}</p>
       {qr ? <img src={qr} alt="QR Code de check-in" className="mt-8 w-[min(70vw,460px)] rounded-3xl" /> : <div className="mt-8 h-[460px] w-[460px] max-w-[70vw] animate-pulse rounded-3xl bg-lona" />}
-      <p className="mt-6 text-nevoa">{fill(t('telao_hint'), { site: typeof window === 'undefined' ? '' : window.location.host })}</p>
+      <p className="mt-6 text-nevoa">{fill(t('telao_hint'), { site: host })}</p>
       <p className="font-display text-6xl font-extrabold tracking-[0.25em] text-sol md:text-8xl">{code || '······'}</p>
+      <button onClick={() => document.documentElement.requestFullscreen?.().catch(() => {})} className="mt-8 h-11 rounded-full border border-palco px-5 text-sm font-semibold text-nevoa hover:border-sol hover:text-luar">Tela cheia</button>
     </div>
   );
 }

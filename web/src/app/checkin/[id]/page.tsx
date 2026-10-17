@@ -14,7 +14,7 @@ export default async function Checkin({ params, searchParams }: { params: { id: 
   return (
     <div className="mx-auto max-w-md py-10 text-center">
       <p className="text-nevoa">{artist.name}</p>
-      <h1 className="mt-1 font-display text-4xl font-extrabold leading-tight">{e.title}</h1>
+      <h1 className="titulo mt-1">{e.title}</h1>
       {user ? (
         <CheckinRunner eventId={e.id} code={searchParams.c || ''} artistSlug={artist.slug} />
       ) : (

@@ -34,7 +34,7 @@ export default async function PerfilPage({ params }: { params: { username: strin
         )}
         <div className="min-w-0">
           <p className="text-nevoa">@{p.username}{p.city ? ` · ${p.city}${p.uf ? `/${p.uf}` : ''}` : ''}</p>
-          <h1 className="cartaz mt-1 text-[clamp(2.5rem,7vw,5rem)]">{p.display_name || p.username}</h1>
+          <h1 className="titulo-xl mt-1">{p.display_name || p.username}</h1>
         </div>
       </div>
       {p.bio && <p className="mt-5 max-w-[60ch] whitespace-pre-line text-lg">{p.bio}</p>}

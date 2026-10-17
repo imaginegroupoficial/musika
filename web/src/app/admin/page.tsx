@@ -5,7 +5,8 @@ import RpcButton from '@/components/RpcButton';
 import SettingsForm from './settings-form';
 import AppearanceForm from './appearance-form';
 import TextsForm from './texts-form';
-import BroadcastForm from './broadcast-form';
+import BroadcastForm, { type ReleaseOption } from './broadcast-form';
+import UsersList, { type AdminUser } from './users';
 import { BannerActions, BannerForm } from './banners';
 import { getSite } from '@/lib/site';
 import { adMediaUrl, brl, formatCount } from '@/lib/media';
@@ -16,6 +17,7 @@ export const revalidate = 0;
 
 const tabs = [
   ['visao', 'Visão geral'],
+  ['usuarios', 'Usuários'],
   ['campanhas', 'Campanhas'],
   ['pagamentos', 'Pagamentos'],
   ['artistas', 'Artistas'],
@@ -30,7 +32,7 @@ const tabs = [
 
 const purposeLabel: Record<string, string> = { premium: 'Premium', fanclub: 'Fã-clube', boost: 'Impulsionamento', ad_campaign: 'Anúncio' };
 
-export default async function Admin({ searchParams }: { searchParams: { aba?: string; q?: string } }) {
+export default async function Admin({ searchParams }: { searchParams: { aba?: string; q?: string; filtro?: string; pagina?: string } }) {
   const { supabase, profile } = await getSessionProfile();
   if (!profile?.is_admin) notFound();
   const aba = tabs.find(([k]) => k === searchParams.aba)?.[0] || 'visao';
@@ -239,12 +241,53 @@ export default async function Admin({ searchParams }: { searchParams: { aba?: st
     body = <TextsForm overrides={(data?.value as Record<string, string>) || {}} />;
   }
 
-  if (aba === 'avisos') {
-    const { count } = await supabase.from('profiles').select('id', { count: 'exact', head: true });
+  if (aba === 'usuarios') {
+    const filtros = [['todos', 'Todos'], ['premium', 'Premium'], ['artistas', 'Artistas'], ['admins', 'Admins'], ['bloqueados', 'Bloqueados']] as const;
+    const filtro = filtros.find(([k]) => k === searchParams.filtro)?.[0] || 'todos';
+    const pagina = Math.max(1, Number(searchParams.pagina) || 1);
+    const por = 30;
+    const q = (searchParams.q || '').trim().slice(0, 80);
+    const { data, error } = await supabase.rpc('admin_users', { p_q: q || null, p_filter: filtro, p_limit: por, p_offset: (pagina - 1) * por });
+    const users = (data || []) as (AdminUser & { total: number })[];
+    const total = users[0]?.total || 0;
+    const link = (o: Record<string, string | number | null>) => '/admin?' + new URLSearchParams(Object.entries({ aba: 'usuarios', q: q || null, filtro, pagina: null, ...o }).filter(([, v]) => v !== null && v !== '' && v !== 'todos').map(([k, v]) => [k, String(v)])).toString();
     body = (
       <>
-        <p className="mb-5 max-w-[64ch] text-nevoa">Mande um aviso para o sino de todos os {formatCount(count || 0)} usuários. Quem ativou recebe também no celular, e quem pediu recebe por e-mail. Lançamentos, shows e posts dos artistas já viram aviso sozinhos para os seguidores.</p>
-        <BroadcastForm />
+        <form action="/admin" className="flex flex-wrap gap-2">
+          <input type="hidden" name="aba" value="usuarios" />
+          {filtro !== 'todos' && <input type="hidden" name="filtro" value={filtro} />}
+          <input name="q" defaultValue={q} placeholder="Buscar por nome, @usuário ou e-mail" className="field h-11 min-w-0 flex-1 sm:max-w-md" />
+          <button className="h-11 rounded-full bg-sol px-6 font-semibold text-noite">Buscar</button>
+        </form>
+        <div className="scroll-row -mx-4 mt-4 flex gap-2 overflow-x-auto px-4 md:mx-0 md:px-0">
+          {filtros.map(([k, l]) => (
+            <Link key={k} href={link({ filtro: k })} className={`shrink-0 rounded-full border px-4 py-1.5 text-sm font-semibold ${filtro === k ? 'border-sol bg-sol text-noite' : 'border-palco text-nevoa hover:text-luar'}`}>{l}</Link>
+          ))}
+        </div>
+        <p className="mt-4 text-sm text-nevoa">{error ? 'Não foi possível carregar os usuários. Rode a atualização (install) para criar as funções novas.' : `${formatCount(total)} ${total === 1 ? 'usuário' : 'usuários'}${q ? ` para "${q}"` : ''}. Toque em um para ver detalhes, dar Premium, bloquear ou tornar admin.`}</p>
+        <UsersList users={users} me={profile.id} />
+        {total > por && (
+          <nav className="mt-6 flex items-center justify-between gap-4 text-sm font-semibold">
+            {pagina > 1 ? <Link href={link({ pagina: pagina - 1 })} className="rounded-full border border-palco px-4 py-2 hover:border-sol">Anterior</Link> : <span />}
+            <span className="text-nevoa">Página {pagina} de {Math.ceil(total / por)}</span>
+            {pagina * por < total ? <Link href={link({ pagina: pagina + 1 })} className="rounded-full border border-palco px-4 py-2 hover:border-sol">Próxima</Link> : <span />}
+          </nav>
+        )}
+      </>
+    );
+  }
+
+  if (aba === 'avisos') {
+    const [{ count }, rels, { brand }] = await Promise.all([
+      supabase.from('profiles').select('id', { count: 'exact', head: true }),
+      supabase.from('releases').select('id, title, kind, slug, cover_path, artists!inner(name, slug)').eq('status', 'ready').order('publish_at', { ascending: false }).limit(300),
+      getSite(),
+    ]);
+    const releases: ReleaseOption[] = ((rels.data || []) as unknown as { id: string; title: string; kind: string; slug: string; cover_path: string | null; artists: { name: string; slug: string } }[]).map((r) => ({ id: r.id, title: r.title, kind: r.kind, slug: r.slug, cover_path: r.cover_path, artist: r.artists.name, artist_slug: r.artists.slug }));
+    body = (
+      <>
+        <p className="mb-5 max-w-[70ch] text-nevoa">Mande um aviso para o sino dos {formatCount(count || 0)} usuários. Quem ativou recebe também no celular, e quem pediu recebe por e-mail. Lançamentos, shows e posts dos artistas já viram aviso sozinhos para os seguidores.</p>
+        <BroadcastForm releases={releases} brandName={brand.name} />
       </>
     );
   }
@@ -256,8 +299,8 @@ export default async function Admin({ searchParams }: { searchParams: { aba?: st
 
   return (
     <>
-      <h1 className="font-display text-5xl font-extrabold tracking-tight">Administração</h1>
-      <nav className="scroll-row -mx-4 mb-8 mt-6 flex gap-1 overflow-x-auto border-b border-lona px-4 md:mx-0 md:px-0">
+      <h1 className="titulo">Administração</h1>
+      <nav className="scroll-row -mx-4 mb-8 mt-6 flex gap-1 overflow-x-auto border-b border-lona px-4 md:mx-0 md:flex-wrap md:overflow-visible md:px-0">
         {tabs.map(([k, l]) => (
           <Link key={k} href={`/admin?aba=${k}`} className={`shrink-0 border-b-2 px-3 pb-3 pt-1 font-semibold ${aba === k ? 'border-sol text-luar' : 'border-transparent text-nevoa hover:text-luar'}`}>{l}</Link>
         ))}

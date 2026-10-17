@@ -1,7 +1,8 @@
 import { MEDIA_URL, SUPABASE_URL } from './env';
 
+// capa: caminho no bucket de capas, ou endereço completo (imagens enviadas pelo admin)
 export const coverUrl = (path?: string | null) =>
-  path ? `${SUPABASE_URL}/storage/v1/object/public/covers/${path}` : null;
+  !path ? null : /^https?:\/\//.test(path) ? path : `${SUPABASE_URL}/storage/v1/object/public/covers/${path}`;
 
 export const hlsUrl = (path?: string | null) => (path ? `${MEDIA_URL}/hls/${path}` : null);
 

@@ -15,7 +15,7 @@ export default async function Impulsionar({ params }: { params: { artistId: stri
   type B = { id: string; placement: string; days: number; amount_cents: number; status: string; ends_at: string | null; impressions: number; clicks: number; releases: { title: string } };
   return (
     <>
-      <h1 className="font-display text-4xl font-extrabold tracking-tight">Impulsionar lançamento</h1>
+      <h1 className="titulo-sm">Impulsionar lançamento</h1>
       <p className="mt-2 max-w-[60ch] text-nevoa">Seu CD aparece com o selo Patrocinado no lugar que você escolher. Começa assim que o Pix cair.</p>
       <div className="mt-6"><BoostForm artistId={params.artistId} releases={releases || []} prices={(price?.value as Record<string, number>) || {}} defaultName={profile?.display_name} /></div>
       <ul className="mt-8 divide-y divide-lona">

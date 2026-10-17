@@ -13,7 +13,7 @@ export default async function Equipe({ params }: { params: { artistId: string } 
   const myRole = members.find((m) => m.user_id === user?.id)?.role;
   return (
     <>
-      <h1 className="font-display text-4xl font-extrabold tracking-tight">Equipe</h1>
+      <h1 className="titulo-sm">Equipe</h1>
       <p className="mt-2 max-w-[60ch] text-nevoa">Chame empresário, social media e produtor para publicar e acompanhar o painel com você.</p>
       <ul className="mt-6 max-w-2xl divide-y divide-lona">
         {members.map((m) => (

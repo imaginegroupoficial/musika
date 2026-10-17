@@ -13,6 +13,11 @@ body { font-family: 'Montserrat Variable', 'Montserrat', system-ui, sans-serif; 
 h1, h2, h3, .font-display { font-family: 'Montserrat Variable', 'Montserrat', system-ui, sans-serif; letter-spacing: -0.02em; }
 h1 { letter-spacing: -0.03em; }
 /* a voz do Paredão Play: caixa alta, peso máximo */
+.titulo, .titulo-sm, .titulo-xl { font-weight: 900; text-transform: uppercase; letter-spacing: -0.03em; line-height: .95; overflow-wrap: anywhere; }
+.titulo { font-size: clamp(2.1rem, 4.6vw, 3.5rem); }
+.titulo-sm { font-size: clamp(1.7rem, 3.2vw, 2.4rem); }
+.titulo-xl { font-size: clamp(2.5rem, 6.4vw, 5.25rem); line-height: .9; }
+h2.font-display { letter-spacing: -0.02em; }
 .cartaz { text-transform: uppercase; font-weight: 900; letter-spacing: -0.03em; line-height: 0.92; }
 /* a assinatura da logo: itálico pesado */
 .marca { font-style: italic; font-weight: 900; text-transform: uppercase; letter-spacing: -0.02em; line-height: 0.85; }

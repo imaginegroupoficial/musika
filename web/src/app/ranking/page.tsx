@@ -15,7 +15,7 @@ export default async function RankingPage({ searchParams }: { searchParams: { pe
 
   return (
     <>
-      <h1 className="cartaz text-[clamp(2.5rem,7vw,5rem)]">{t.ranking_title}</h1>
+      <h1 className="titulo">{t.ranking_title}</h1>
       <p className="mt-3 max-w-[60ch] text-nevoa">
         {t.ranking_intro}
       </p>

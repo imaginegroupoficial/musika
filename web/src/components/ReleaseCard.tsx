@@ -36,7 +36,7 @@ export default function ReleaseCard({ r, rank }: { r: ReleaseCardData & { boost_
         {r.verified && <CheckBadge className="h-3.5 w-3.5 shrink-0 text-sol" />}
       </p>
       {(r.plays != null && r.plays > 0) || r.kind ? (
-        <p className="mt-0.5 text-xs text-nevoa/80">
+        <p className="mt-0.5 text-[13px] text-nevoa/80">
           {r.kind ? kindLabel[r.kind] : ''}
           {r.plays ? `${r.kind ? ', ' : ''}${formatCount(r.plays)} plays` : ''}
         </p>
@@ -50,11 +50,11 @@ export function ReleaseRow({ title, href, items, ranked }: { title: string; href
   return (
     <section className="mt-10">
       <div className="mb-4 flex items-baseline justify-between gap-4">
-        <h2 className="font-display text-2xl font-bold tracking-tight">
+        <h2 className="min-w-0 truncate font-display text-xl font-bold tracking-tight md:text-2xl">
           {href ? <Link href={href} className="inline-flex items-center gap-2 hover:text-sol">{title}<span className="text-sol" aria-hidden>›</span></Link> : title}
         </h2>
         {href && (
-          <Link href={href} className="text-sm font-semibold text-sol hover:underline">
+          <Link href={href} className="shrink-0 whitespace-nowrap text-sm font-semibold text-sol hover:underline">
             Ver todos
           </Link>
         )}

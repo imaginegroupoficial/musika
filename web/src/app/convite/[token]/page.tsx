@@ -18,7 +18,7 @@ export default function Convite() {
   };
   return (
     <div className="mx-auto max-w-md py-12">
-      <h1 className="font-display text-5xl font-extrabold leading-[0.95]">Você foi chamado para a equipe.</h1>
+      <h1 className="titulo">Você foi chamado para a equipe.</h1>
       <p className="mt-4 text-nevoa">Aceite para publicar lançamentos e ver o painel do artista no Studio.</p>
       {error && <p className="mt-6 rounded-lg bg-chita/15 px-3 py-2" role="alert">{error}</p>}
       <button onClick={accept} className="mt-8 h-12 rounded-full bg-sol px-8 font-semibold text-noite">Aceitar convite</button>

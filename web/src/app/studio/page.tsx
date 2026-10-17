@@ -15,7 +15,7 @@ export default async function Studio() {
 
   return (
     <>
-      <h1 className="font-display text-5xl font-extrabold tracking-tight md:text-6xl">Studio</h1>
+      <h1 className="titulo">Studio</h1>
       {artists.length === 0 ? (
         <div className="mt-6 max-w-xl">
           <p className="text-lg text-nevoa">

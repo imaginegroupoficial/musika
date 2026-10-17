@@ -58,7 +58,7 @@ function Form() {
   if (waiting) {
     return (
       <div className="mx-auto max-w-md py-10">
-        <h1 className="font-display text-5xl font-extrabold leading-[0.95] tracking-tight">Confirme seu e-mail.</h1>
+        <h1 className="titulo">Confirme seu e-mail.</h1>
         <p className="mt-5 text-lg">Enviamos um link para <strong>{waiting}</strong>. Abra e toque em Confirmar meu e-mail para ativar a conta.</p>
         <p className="mt-3 text-nevoa">Não chegou? Olhe o spam e a aba Promoções.</p>
         {error && <p className="mt-4 rounded-lg bg-lona px-3 py-2 text-sm" role="status">{error}</p>}
@@ -71,7 +71,7 @@ function Form() {
     <div className="mx-auto max-w-md py-10">
       <img src="/brand/logo.png" alt="Paredão Play" className="mx-auto mb-10 h-32 w-auto" />
       {linkError && <p className="mb-6 rounded-lg bg-chita/15 px-4 py-3 text-sm">Esse link já foi usado ou venceu. Entre com sua senha ou peça um link novo.</p>}
-      <h1 className="font-display text-5xl font-extrabold leading-[0.95] tracking-tight">
+      <h1 className="titulo">
         {mode === 'entrar' ? tx('login_title') : tx('signup_title')}
       </h1>
       <p className="mt-4 text-nevoa">

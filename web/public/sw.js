@@ -1,5 +1,5 @@
 // Paredão Play service worker: app instalável e cache de segmentos de áudio já ouvidos
-const STATIC = 'musika-static-v2';
+const STATIC = 'musika-static-v3';
 const AUDIO = 'musika-audio-v1';
 const AUDIO_MAX = 400;
 
@@ -57,8 +57,11 @@ self.addEventListener('push', (event) => {
     self.registration.showNotification(title, {
       body: d.body || '',
       icon: d.icon || '/icon-192.png',
+      image: d.image,
       badge: '/badge-96.png',
       tag: d.tag,
+      renotify: true,
+      actions: Array.isArray(d.actions) ? d.actions.slice(0, 2) : [],
       data: { url: d.url || '/' },
     }),
   );

@@ -1,5 +1,5 @@
 // Logo oficial do Paredão Play (arquivos em /public/brand). Se o admin enviar outra logo, ela tem prioridade.
-const SIZES = { sm: 'h-8', md: 'h-10', lg: 'h-14', xl: 'h-28' } as const;
+const SIZES = { sm: 'h-8', md: 'h-10', lg: 'h-16 md:h-20', xl: 'h-28' } as const;
 
 export function LogoMark({ className = 'h-9 w-auto' }: { className?: string }) {
   return <img src="/brand/marca.png" alt="" className={className} />;

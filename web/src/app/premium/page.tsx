@@ -21,7 +21,7 @@ export default async function PremiumPage() {
 
   return (
     <div className="max-w-3xl">
-      <h1 className="cartaz text-[clamp(2.75rem,8vw,6rem)]">{t.premium_title}</h1>
+      <h1 className="titulo-xl">{t.premium_title}</h1>
       <p className="mt-5 max-w-[56ch] text-lg text-nevoa">
         {fill(t.premium_intro, { preco: brl(price), dias: days })}
       </p>

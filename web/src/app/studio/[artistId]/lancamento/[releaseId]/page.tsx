@@ -16,7 +16,7 @@ export default async function EditRelease({ params }: { params: { artistId: stri
     <>
       <AutoRefresh active={release.status === 'processing'} />
       <div className="mb-6 flex flex-wrap items-center justify-between gap-3">
-        <h1 className="font-display text-4xl font-extrabold tracking-tight">{release.title}</h1>
+        <h1 className="titulo-sm">{release.title}</h1>
         <div className="flex gap-2">
           <Link href={`/${slug}/${release.slug}`} className="h-10 rounded-full border border-luar/40 px-4 pt-2 text-sm font-semibold">Ver página</Link>
           <DeleteRow table="releases" id={release.id} label="Excluir lançamento" confirm="Excluir o lançamento e todas as faixas? Não dá para desfazer." />

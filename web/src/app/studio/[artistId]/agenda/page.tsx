@@ -12,7 +12,7 @@ export default async function Agenda({ params }: { params: { artistId: string } 
   (checks || []).forEach((c) => count.set(c.event_id, (count.get(c.event_id) || 0) + 1));
   return (
     <>
-      <h1 className="font-display text-4xl font-extrabold tracking-tight">Agenda de shows</h1>
+      <h1 className="titulo-sm">Agenda de shows</h1>
       <p className="mt-2 max-w-[60ch] text-nevoa">Os shows aparecem na sua página. No dia, abra o telão: o fã escaneia o QR, faz check-in e ganha 50 pontos com você.</p>
       <div className="mt-6"><EventForm artistId={params.artistId} /></div>
       <ul className="mt-8 divide-y divide-lona">

@@ -36,7 +36,7 @@ export default function NovoArtista() {
 
   return (
     <div className="max-w-xl">
-      <h1 className="font-display text-5xl font-extrabold leading-[0.95] tracking-tight">Seu perfil de artista</h1>
+      <h1 className="titulo">Seu perfil de artista</h1>
       <form onSubmit={submit} className="mt-8 space-y-5">
         <label className="block">
           <span className="mb-1 block text-sm font-medium">Nome artístico</span>

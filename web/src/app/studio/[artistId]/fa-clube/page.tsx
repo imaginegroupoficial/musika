@@ -14,7 +14,7 @@ export default async function FaClube({ params }: { params: { artistId: string }
   const m = money as { members: number; pending_cents: number; paid_cents: number };
   return (
     <>
-      <h1 className="font-display text-4xl font-extrabold tracking-tight">Fã-clube e mural</h1>
+      <h1 className="titulo-sm">Fã-clube e mural</h1>
       <dl className="mt-6 grid max-w-2xl grid-cols-3 gap-4">
         <div><dt className="text-sm text-nevoa">Sócios ativos</dt><dd className="font-display text-3xl font-extrabold">{m.members}</dd></div>
         <div><dt className="text-sm text-nevoa">A receber</dt><dd className="font-display text-3xl font-extrabold">{brl(m.pending_cents)}</dd></div>

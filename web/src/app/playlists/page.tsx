@@ -25,7 +25,7 @@ export default async function Playlists() {
   );
   return (
     <>
-      <h1 className="font-display text-5xl font-extrabold tracking-tight md:text-6xl">Playlists</h1>
+      <h1 className="titulo">Playlists</h1>
       <div className="mt-6 max-w-2xl"><CreatePlaylist /></div>
       <ul className="mt-8 max-w-2xl divide-y divide-lona">{((own.data as unknown as P[]) || []).map((p) => row(p))}</ul>
       {shared.length > 0 && (

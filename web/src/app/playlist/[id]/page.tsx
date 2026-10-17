@@ -36,7 +36,7 @@ export default async function PlaylistPage({ params }: { params: { id: string } 
   return (
     <>
       <p className="text-sm font-semibold text-nevoa">Playlist{p.collaborative ? ' colaborativa' : ''}{p.is_public ? '' : ' privada'}</p>
-      <h1 className="mt-1 font-display text-[clamp(2.5rem,7vw,5rem)] font-extrabold leading-[0.9] tracking-tight">{p.title}</h1>
+      <h1 className="titulo-xl mt-1">{p.title}</h1>
       <p className="mt-3 text-nevoa">por <Link href={`/perfil/${owner.username}`} className="font-semibold text-luar hover:underline">{owner.display_name || owner.username}</Link>, {tracks.length} faixas</p>
       <div className="mt-6 flex flex-wrap gap-3">
         <PlayAllButton tracks={tracks} source={`playlist:${p.id}`} />

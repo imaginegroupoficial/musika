@@ -110,7 +110,7 @@ export default function Sala() {
     <div className="grid gap-8 lg:grid-cols-[1fr_360px]">
       <section>
         <p className="text-sm font-semibold text-chita">{isHost ? 'Você está no comando' : 'Ouvindo junto'}{connected ? '' : ', conectando…'}</p>
-        <h1 className="mt-1 font-display text-[clamp(2.5rem,7vw,5rem)] font-extrabold leading-[0.9] tracking-tight">Sala {code.toUpperCase()}</h1>
+        <h1 className="titulo-xl mt-1">Sala {code.toUpperCase()}</h1>
         <p className="mt-3 max-w-[56ch] text-nevoa">
           {isHost ? 'Toque qualquer música no Paredão Play: quem estiver na sala ouve a mesma coisa, no mesmo segundo.' : 'O anfitrião escolhe as músicas. Seu player acompanha sozinho.'}
         </p>

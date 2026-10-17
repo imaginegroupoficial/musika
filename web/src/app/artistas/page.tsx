@@ -21,7 +21,7 @@ export default async function Artistas({ searchParams }: { searchParams: { estil
   );
   return (
     <>
-      <h1 className="cartaz text-[clamp(2.5rem,6vw,4.5rem)]">Artistas</h1>
+      <h1 className="titulo">Artistas</h1>
       <div className="scroll-row -mx-4 mt-6 flex gap-2 overflow-x-auto px-4 pb-1 md:mx-0 md:flex-wrap md:px-0">
         {chip(link({ estilo: null }), !estilo, 'Todos')}
         {GENRES.filter((g) => g !== 'Outro').map((g) => chip(link({ estilo: g }), estilo === g, g))}

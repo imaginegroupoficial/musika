@@ -80,7 +80,7 @@ export default async function ArtistDashboard({ params }: { params: { artistId: 
       <div className="flex flex-wrap items-end justify-between gap-4">
         <div>
           <Link href={`/${artist.slug}`} className="text-sm font-semibold text-nevoa hover:text-luar">{SITE_HOST}/{artist.slug}</Link>
-          <h1 className="mt-1 font-display text-5xl font-extrabold tracking-tight md:text-6xl">{artist.name}</h1>
+          <h1 className="titulo mt-1">{artist.name}</h1>
         </div>
         <Link href={`/studio/${artist.id}/lancamento`} className="inline-flex h-12 items-center rounded-full bg-sol px-6 font-semibold text-noite">
           Publicar lançamento

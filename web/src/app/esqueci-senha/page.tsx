@@ -22,7 +22,7 @@ export default function EsqueciSenha() {
 
   return (
     <div className="mx-auto max-w-md py-10">
-      <h1 className="font-display text-5xl font-extrabold leading-[0.95] tracking-tight">Esqueceu a senha?</h1>
+      <h1 className="titulo">Esqueceu a senha?</h1>
       {sent ? (
         <>
           <p className="mt-6 text-lg">Se existir uma conta com <strong>{email}</strong>, o link para criar uma senha nova já está a caminho.</p>

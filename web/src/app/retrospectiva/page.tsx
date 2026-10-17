@@ -30,7 +30,7 @@ export default async function Retrospectiva({ searchParams }: { searchParams: { 
     return (
       <div className="max-w-xl py-10">
         <div className="flex gap-2">{tab(!sj, '/retrospectiva', `${year}`)}{tab(sj, '/retrospectiva?periodo=sao-joao', `São João ${year}`)}</div>
-        <h1 className="mt-8 font-display text-5xl font-extrabold leading-[0.95]">Sua retrospectiva ainda está em branco.</h1>
+        <h1 className="titulo mt-8">Sua retrospectiva ainda está em branco.</h1>
         <p className="mt-4 text-nevoa">Ouça seus artistas até o fim das faixas e volte aqui para ver o seu resumo.</p>
       </div>
     );

@@ -26,7 +26,7 @@ export default async function Campanha({ params }: { params: { id: string } }) {
     <div className="max-w-4xl">
       <Link href="/anunciar" className="text-sm font-semibold text-nevoa hover:text-luar">Suas campanhas</Link>
       <div className="mt-2 flex flex-wrap items-center gap-3">
-        <h1 className="font-display text-5xl font-extrabold tracking-tight">{c.name}</h1>
+        <h1 className="titulo">{c.name}</h1>
         <span className={`rounded-full px-3 py-1 text-sm font-semibold ${st.cls}`}>{st.text}</span>
       </div>
       <p className="mt-2 text-nevoa">{c.kind === 'audio' ? `Áudio de ${c.duration_sec || '?'} s` : 'Banner'} de {c.advertiser}. {c.target_genres.length ? c.target_genres.join(', ') : 'Todos os estilos'}; {c.target_ufs.length ? c.target_ufs.join(', ') : 'Brasil todo'}.</p>

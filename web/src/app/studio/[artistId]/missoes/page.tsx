@@ -13,7 +13,7 @@ export default async function Missoes({ params }: { params: { artistId: string }
   ]);
   return (
     <>
-      <h1 className="font-display text-4xl font-extrabold tracking-tight">Missões</h1>
+      <h1 className="titulo-sm">Missões</h1>
       <p className="mt-2 max-w-[60ch] text-nevoa">Desafios que dão pontos aos seus fãs. Os pontos sobem o fã no seu ranking e podem ser trocados pelas suas recompensas.</p>
       <div className="mt-6"><MissionForm artistId={params.artistId} releases={releases || []} events={events || []} /></div>
       <ul className="mt-8 divide-y divide-lona">

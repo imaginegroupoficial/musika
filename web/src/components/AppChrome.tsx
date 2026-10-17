@@ -107,7 +107,7 @@ export function TopNav({ user, bell, brandName, logoUrl }: { user: ChromeUser; b
         <Link href="/" className="shrink-0"><Logo name={brandName} logoUrl={logoUrl} /></Link>
         <nav className="flex h-full items-stretch gap-1">
           {main.map(({ href, label }) => (
-            <Link key={href} href={href} aria-current={active(path, href) ? 'page' : undefined} className={`relative flex items-center px-3 text-sm font-semibold transition-colors ${active(path, href) ? 'text-luar' : 'text-nevoa hover:text-luar'}`}>
+            <Link key={href} href={href} aria-current={active(path, href) ? 'page' : undefined} className={`relative flex items-center px-3 text-[15px] font-semibold transition-colors ${active(path, href) ? 'text-luar' : 'text-nevoa hover:text-luar'}`}>
               {label}
               {active(path, href) && <span className="absolute inset-x-3 bottom-0 h-[3px] rounded-t-full bg-sol" />}
             </Link>

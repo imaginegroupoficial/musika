@@ -16,7 +16,7 @@ export default async function Recompensas({ params }: { params: { artistId: stri
   const others = ((reds as unknown as Red[]) || []).filter((r) => r.status !== 'pending');
   return (
     <>
-      <h1 className="font-display text-4xl font-extrabold tracking-tight">Recompensas</h1>
+      <h1 className="titulo-sm">Recompensas</h1>
       <p className="mt-2 max-w-[60ch] text-nevoa">O fã troca os pontos que fez com você. Você entrega e marca como entregue; se cancelar, os pontos voltam para ele.</p>
       <div className="mt-6"><RewardForm artistId={params.artistId} /></div>
 

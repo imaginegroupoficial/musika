@@ -33,7 +33,7 @@ export default function NovaSenha() {
   if (!ready) {
     return (
       <div className="mx-auto max-w-md py-10">
-        <h1 className="font-display text-5xl font-extrabold leading-[0.95]">Link vencido</h1>
+        <h1 className="titulo">Link vencido</h1>
         <p className="mt-4 text-nevoa">O link para trocar a senha vale por 1 hora e só funciona uma vez. Peça outro.</p>
         <Link href="/esqueci-senha" className="mt-8 inline-flex h-12 items-center rounded-full bg-sol px-6 font-semibold text-noite">Pedir link novo</Link>
       </div>
@@ -41,7 +41,7 @@ export default function NovaSenha() {
   }
   return (
     <form onSubmit={save} className="mx-auto max-w-md space-y-4 py-10">
-      <h1 className="font-display text-5xl font-extrabold leading-[0.95]">Crie sua senha nova</h1>
+      <h1 className="titulo">Crie sua senha nova</h1>
       <label className="block">
         <span className="mb-1 block text-sm font-medium">Senha nova</span>
         <input type="password" required minLength={6} value={pass} onChange={(e) => setPass(e.target.value)} className="field" autoComplete="new-password" />

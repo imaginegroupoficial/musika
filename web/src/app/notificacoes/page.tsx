@@ -36,7 +36,7 @@ export default async function Notificacoes() {
   return (
     <div className="max-w-3xl">
       <div className="flex flex-wrap items-end justify-between gap-4">
-        <h1 className="cartaz text-[clamp(2.5rem,7vw,4.5rem)]">Avisos</h1>
+        <h1 className="titulo">Avisos</h1>
         <Link href="/conta#notificacoes" className="text-sm font-semibold text-nevoa hover:text-luar">Escolher o que receber</Link>
       </div>
 
@@ -63,8 +63,10 @@ export default async function Notificacoes() {
                   <span className="relative shrink-0">
                     {img ? (
                       <img src={img} alt="" className={`h-14 w-14 object-cover ${n.image_path ? 'rounded-lg' : 'rounded-full'}`} />
+                    ) : n.artists ? (
+                      <span className="flex h-14 w-14 items-center justify-center rounded-full bg-sol font-display text-xl font-black text-noite">{n.artists.name.slice(0, 1)}</span>
                     ) : (
-                      <span className="flex h-14 w-14 items-center justify-center rounded-full bg-sol font-display text-xl font-black text-noite">{(n.artists?.name || 'M').slice(0, 1)}</span>
+                      <span className="flex h-14 w-14 items-center justify-center rounded-full border border-palco bg-lona p-2.5"><img src="/brand/marca.png" alt="" className="w-full" /></span>
                     )}
                     {!n.read_at && <span className="absolute -left-1 -top-1 h-3.5 w-3.5 rounded-full bg-chita ring-2 ring-noite" aria-label="Nova" />}
                   </span>

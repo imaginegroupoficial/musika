@@ -50,7 +50,7 @@ export default function TextsForm({ overrides }: { overrides: Record<string, str
           </div>
         </fieldset>
       ))}
-      <div className="sticky bottom-24 md:bottom-24">
+      <div className="sticky bottom-[7.5rem] z-10 -mx-4 mt-6 border-t border-palco bg-noite/95 px-4 py-3 backdrop-blur md:bottom-20 md:mx-0 md:rounded-2xl md:border">
         <button disabled={busy} className="h-12 rounded-full bg-sol px-8 font-semibold text-noite disabled:opacity-60">{busy ? 'Salvando…' : 'Salvar textos'}</button>
       </div>
     </form>

@@ -23,7 +23,7 @@ export default function Show() {
   };
   return (
     <div className="mx-auto max-w-md py-10 text-center">
-      <h1 className="font-display text-5xl font-extrabold leading-[0.95]">Check-in no show</h1>
+      <h1 className="titulo">Check-in no show</h1>
       {res?.ok ? (
         <>
           <p className="mt-8 font-display text-6xl font-extrabold text-sol">{res.already ? 'Já está!' : `+${res.points}`}</p>
